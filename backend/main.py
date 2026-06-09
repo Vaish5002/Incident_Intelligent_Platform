@@ -1,0 +1,105 @@
+"""
+SmartOps AI - RCA Engine (Member 3)
+Main FastAPI Application
+"""
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from loguru import logger
+import sys
+
+from backend.ai.config import settings
+from backend.api.rca_routes import router as rca_router
+from backend.api.risk_routes import router as risk_router
+from backend.api.knowledge_routes import router as knowledge_router
+from backend.api.rag_routes import router as rag_router
+from backend.api.copilot_routes import router as copilot_router
+from backend.api.pdf_routes import router as pdf_router
+
+# Configure logging
+logger.remove()
+logger.add(
+    sys.stdout,
+    format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan> - <level>{message}</level>",
+    level="INFO" if not settings.DEBUG else "DEBUG"
+)
+
+# Create FastAPI app
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    description="AI-powered Root Cause Analysis Engine for SmartOps Platform",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins_list,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+app.include_router(rca_router)
+app.include_router(risk_router)
+app.include_router(knowledge_router)
+app.include_router(rag_router)
+app.include_router(copilot_router)
+app.include_router(pdf_router)
+
+
+@app.get("/")
+async def root():
+    """Root endpoint"""
+    return {
+        "service": settings.APP_NAME,
+        "version": settings.APP_VERSION,
+        "description": "Member 3 - AI & RCA Engine",
+        "member": "Member 3",
+        "responsibilities": [
+            "Gemini Integration",
+            "RAG System",
+            "RCA Generation",
+            "Risk Scoring",
+            "Knowledge Base",
+            "Embedding Service",
+            "RAG Retrieval",
+            "AI Copilot",
+            "PDF Generation"
+        ],
+        "endpoints": {
+            "health": "/api/health",
+            "generate_rca": "POST /api/generate-rca",
+            "quick_rca": "POST /api/quick-rca",
+            "recommendations": "POST /api/recommendations",
+            "docs": "/docs"
+        }
+    }
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize on startup"""
+    logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
+    logger.info(f"Gemini Model: {settings.GEMINI_MODEL}")
+    logger.info(f"Server ready on {settings.API_HOST}:{settings.API_PORT}")
+    logger.info(f"Documentation: http://{settings.API_HOST}:{settings.API_PORT}/docs")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup on shutdown"""
+    logger.info("Shutting down SmartOps AI RCA Engine")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    
+    uvicorn.run(
+        "backend.main:app",
+        host=settings.API_HOST,
+        port=settings.API_PORT,
+        reload=settings.DEBUG
+    )
