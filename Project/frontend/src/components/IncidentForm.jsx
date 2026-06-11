@@ -11,11 +11,11 @@ const IncidentForm = ({ onSubmit }) => {
   const validateForm = () => {
     const newErrors = {};
     
-    // GitHub URL regex validation
-    const githubRegex = /^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+(\/)?$/;
+    // GitHub URL regex validation - accepts various formats
+    const githubRegex = /^https?:\/\/(www\.)?github\.com\/[\w.-]+\/[\w.-]+(\/.*)?$/;
     if (!githubUrl) {
       newErrors.githubUrl = "GitHub Repository URL is required.";
-    } else if (!githubRegex.test(githubUrl)) {
+    } else if (!githubRegex.test(githubUrl.trim())) {
       newErrors.githubUrl = "Please enter a valid GitHub repository URL (e.g., https://github.com/owner/repo).";
     }
 
