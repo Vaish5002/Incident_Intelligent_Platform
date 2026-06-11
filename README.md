@@ -508,10 +508,9 @@ npm run build
 ## Team Contributions
 
 ### Member 1: Investigation Engine & GitHub Integration
-- GitHub Agent implementation
-- Log Agent implementation
-- Investigation Engine orchestration
-- Timeline API development
+- Backend APIs
+- Database Integration
+- Investigation Services
 
 ### Member 2: Chaos Demo Platform
 - 7 failure type simulations
@@ -520,6 +519,7 @@ npm run build
 - Deployment infrastructure
 
 ### Member 3: AI & RCA Engine
+- GitHub Agent,Log Agent,Investigation Agent
 - Google Gemini integration
 - RAG system implementation
 - RCA generation logic
