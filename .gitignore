@@ -19,6 +19,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+PYRIGHTCONFIG*
 
 # Virtual Environment
 venv/
@@ -36,14 +37,19 @@ venv.bak/
 
 # Environment variables
 .env
+Project/backend/.env
 backend/.env
+.env.local
+.env.*.local
 
 # Database
 *.db
 *.sqlite
 *.sqlite3
+Project/backend/*.db
 backend/*.db
-backend/*.sqlite
+smartops.db
+smartops_ai.db
 
 # Logs
 *.log
@@ -54,20 +60,53 @@ logs/
 .coverage
 htmlcov/
 .tox/
+test_output/
+Project/backend/test_output/
 backend/test_output/
 
 # OS
 .DS_Store
 Thumbs.db
+*.tmp
 
-# Jupyter Notebooks
-.ipynb_checkpoints
-
-# Distribution / packaging
-.Python
-build/
-dist/
-*.egg-info/
-
-# Node modules (if any frontend code)
+# Node modules
 node_modules/
+Project/frontend/node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+build/
+Project/frontend/dist/
+Project/backend/dist/
+frontend/dist/
+backend/dist/
+
+# Temporary files
+temp/
+tmp/
+temp_analysis/
+Resume/
+*.bak
+
+# ALL Markdown files EXCEPT README.md
+*.md
+!README.md
+
+# All text files
+*.txt
+
+# Batch files
+*.bat
+
+# Test scripts
+test_*.py
+!Project/backend/test_*.py
+
+# Duplicate folders at root (code is in Project/ folder)
+/backend/
+/frontend/
+/agents/
+
+# Temporary analysis moved to Project/
+/temp_analysis/
