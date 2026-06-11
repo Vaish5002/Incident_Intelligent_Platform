@@ -455,27 +455,54 @@ python test_all_7_failures.py  # Test all failure types
 
 ## Deployment
 
-### Development
+### Quick Deploy to Cloud
+
+**Backend → Render (Free tier):**
+1. Sign up at https://render.com
+2. New Web Service → Connect GitHub repository
+3. Root Directory: `Project/backend`
+4. Build Command: `pip install -r requirements.txt`
+5. Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+6. Add environment variable: `GEMINI_API_KEY=your_api_key`
+7. Deploy → Get URL: `https://your-app.onrender.com`
+
+**Frontend → Vercel (Free tier):**
+1. Sign up at https://vercel.com
+2. New Project → Import from GitHub
+3. Root Directory: `Project/frontend`
+4. Framework: Vite
+5. Install Command: `npm install --legacy-peer-deps`
+6. Environment Variable: `VITE_API_URL=https://your-backend.onrender.com`
+7. Deploy → Get URL: `https://your-app.vercel.app`
+
+**Complete deployment guide:** See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions with screenshots and troubleshooting.
+
+### Local Development
 ```bash
 # Terminal 1: Backend
-cd Project/backend && python run_server.py
+cd Project/backend
+python run_server.py
+# Available at http://localhost:8002
 
 # Terminal 2: Frontend
-cd Project/frontend && npm run dev
+cd Project/frontend
+npm run dev
+# Available at http://localhost:5173
 ```
 
-### Production
+### Production Build
 Backend:
 ```bash
 cd Project/backend
-gunicorn main:app --workers 4 --bind 0.0.0.0:8002
+uvicorn main:app --host 0.0.0.0 --port 8002 --workers 4
 ```
 
 Frontend:
 ```bash
 cd Project/frontend
 npm run build
-# Serve dist/ folder with nginx or static hosting
+# Outputs to dist/ folder
+# Serve with nginx, Apache, or any static hosting
 ```
 
 ## Team Contributions

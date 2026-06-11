@@ -38,7 +38,10 @@ venv.bak/
 # Environment variables
 .env
 Project/backend/.env
+Project/frontend/.env
+Project/frontend/.env.local
 backend/.env
+frontend/.env
 .env.local
 .env.*.local
 

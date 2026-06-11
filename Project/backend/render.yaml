@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: smartops-ai-backend
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-flash-latest
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: API_PORT
+        value: 8002
+      - key: DEBUG
+        value: False
+      - key: DATABASE_URL
+        value: sqlite:///./smartops_ai.db
+      - key: CORS_ORIGINS
+        value: "*"
+    healthCheckPath: /health
