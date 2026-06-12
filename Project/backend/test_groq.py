@@ -1,5 +1,5 @@
 """
-Quick test script for Gemini Integration
+Quick test script for Groq Integration
 Run this to verify your setup works
 """
 import asyncio
@@ -10,35 +10,31 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from backend.ai.gemini_service import GeminiService
+from backend.ai.groq_service import GroqService
 from backend.ai.config import settings
 
 
-async def test_gemini_service():
-    """Test Gemini service with sample data"""
+async def test_groq_service():
+    """Test Groq service with sample data"""
     
     print("=" * 60)
-    print("Testing SmartOps AI - Gemini Integration")
+    print("Testing SmartOps AI - Groq Integration")
     print("=" * 60)
     
     # Check API key
-    if not settings.GEMINI_API_KEY:
-        print("❌ ERROR: GEMINI_API_KEY not set in .env file")
-        print("\nTo fix:")
-        print("1. Copy .env.example to .env")
-        print("2. Add your Gemini API key")
-        print("3. Get key from: https://makersuite.google.com/app/apikey")
+    if not settings.GROQ_API_KEY:
+        print("❌ ERROR: GROQ_API_KEY not set in .env file")
         return
     
     print(f"✅ API Key configured")
-    print(f"✅ Model: {settings.GEMINI_MODEL}")
+    print(f"✅ Model: {settings.GROQ_MODEL}")
     print()
     
     try:
         # Initialize service
-        print("Initializing Gemini service...")
-        service = GeminiService()
-        print("✅ Gemini service initialized\n")
+        print("Initializing Groq service...")
+        service = GroqService()
+        print("✅ Groq service initialized\n")
         
         # Sample incident data
         print("=" * 60)
@@ -151,7 +147,6 @@ async def test_gemini_service():
         print("\nYou can now:")
         print("1. Start the API server: python -m backend.main")
         print("2. Test via API: http://localhost:8002/docs")
-        print("3. Integrate with Member 1's investigation backend")
         
     except Exception as e:
         print(f"\n❌ Error: {e}")
@@ -159,4 +154,4 @@ async def test_gemini_service():
 
 
 if __name__ == "__main__":
-    asyncio.run(test_gemini_service())
+    asyncio.run(test_groq_service())

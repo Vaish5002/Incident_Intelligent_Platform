@@ -1,5 +1,5 @@
 """
-Prompt Templates for Gemini AI
+Prompt Templates for Groq AI
 """
 
 RCA_GENERATION_PROMPT = """You are an expert Site Reliability Engineer (SRE) and incident analyst. Analyze the following production incident and generate a comprehensive Root Cause Analysis (RCA).

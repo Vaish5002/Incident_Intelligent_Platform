@@ -1,11 +1,11 @@
 """
 AI Copilot Service
-Interactive incident assistant powered by Gemini
+Interactive incident assistant powered by Groq
 """
 from typing import Dict, Any, Optional, List
 from loguru import logger
 
-from backend.ai.gemini_service import GeminiService
+from backend.ai.groq_service import GroqService
 from backend.ai.rag_service import RAGService
 
 
@@ -22,7 +22,7 @@ class CopilotService:
     
     def __init__(self):
         """Initialize copilot service"""
-        self.gemini = GeminiService()
+        self.groq = GroqService()
         self.rag = RAGService()
         self.conversation_history: List[Dict[str, str]] = []
         logger.info("AI Copilot initialized")
@@ -100,9 +100,9 @@ class CopilotService:
             # Build copilot prompt
             prompt = self._build_copilot_prompt(question, context_text)
             
-            # Get answer from Gemini
+            # Get answer from Groq
             logger.info(f"Copilot question: {question}")
-            response = self.gemini.generate_text(prompt)
+            response = self.groq.generate_text(prompt)
             
             if not response.get("success"):
                 return {
@@ -395,7 +395,7 @@ Your role is to:
         return {
             "service": "AI Copilot",
             "status": "operational",
-            "ai_model": self.gemini.model_name,
+            "ai_model": self.groq.model_name,
             "conversation_history_size": len(self.conversation_history),
             "capabilities": [
                 "Answer incident questions",

@@ -5,7 +5,7 @@ Generates comprehensive Root Cause Analysis reports
 from typing import Dict, Any, Optional, List
 from loguru import logger
 
-from backend.ai.gemini_service import GeminiService
+from backend.ai.groq_service import GroqService
 from backend.ai.risk_engine import RiskEngine
 
 
@@ -17,7 +17,7 @@ class RCAGenerator:
     
     def __init__(self):
         """Initialize RCA generator with AI and risk services"""
-        self.gemini_service = GeminiService()
+        self.groq_service = GroqService()
         self.risk_engine = RiskEngine()
         logger.info("RCA Generator initialized")
     
@@ -62,8 +62,8 @@ class RCAGenerator:
                 timeline=timeline
             )
             
-            # Step 3: Generate RCA using Gemini
-            rca_result = self.gemini_service.generate_rca(
+            # Step 3: Generate RCA using Groq
+            rca_result = self.groq_service.generate_rca(
                 incident_description=incident_description,
                 severity=risk_data["severity"],
                 affected_service=affected_service or "unknown",
@@ -128,8 +128,8 @@ class RCAGenerator:
                 logs=logs
             )
             
-            # Quick RCA from Gemini
-            rca_result = self.gemini_service.generate_quick_rca(
+            # Quick RCA from Groq
+            rca_result = self.groq_service.generate_quick_rca(
                 incident_description=incident_description,
                 log_summary=logs,
                 timeline_summary=timeline

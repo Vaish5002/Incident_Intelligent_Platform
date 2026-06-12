@@ -44,7 +44,7 @@ class RCAResponse(BaseModel):
             "example": {
                 "incident_id": "INC-12345678",
                 "rca_text": "## Root Cause Analysis\n\n### Executive Summary\nThe payment service failure was caused by...",
-                "model_used": "gemini-1.5-flash",
+                "model_used": "llama-3.3-70b-versatile",
                 "success": True
             }
         }

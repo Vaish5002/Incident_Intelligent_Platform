@@ -248,7 +248,7 @@ class Member1IntegrationService:
         
         Args:
             investigation_id: Investigation ID
-            generate_rca: Generate RCA using Gemini
+            generate_rca: Generate RCA using Groq
             calculate_risk: Calculate risk score
             find_similar: Find similar incidents using RAG
             
@@ -351,7 +351,7 @@ class Member1IntegrationService:
                 "Investigation Results"
             ],
             "feeds_into": [
-                "RCA Engine (Gemini AI)",
+                "RCA Engine (Groq AI)",
                 "Risk Engine (Multi-factor scoring)",
                 "RAG System (Similar incidents)"
             ]

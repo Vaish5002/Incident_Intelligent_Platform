@@ -7,7 +7,7 @@ from loguru import logger
 from typing import Optional
 
 from backend.ai.member1_integration import Member1IntegrationService
-from backend.ai.gemini_service import GeminiService
+from backend.ai.groq_service import GroqService
 from backend.ai.risk_engine import RiskEngine
 from backend.ai.rag_service import RAGService
 
@@ -16,7 +16,7 @@ router = APIRouter(prefix="/api/integration", tags=["Member 1 Integration"])
 # Initialize services
 try:
     member1_service = Member1IntegrationService()
-    gemini_service = GeminiService()
+    groq_service = GroqService()
     risk_engine = RiskEngine()
     rag_service = RAGService()
     logger.info("Integration services initialized successfully")
@@ -171,12 +171,12 @@ async def process_investigation_full(
         )
         
         # Step 2: Generate RCA if requested
-        if generate_rca and gemini_service:
+        if generate_rca and groq_service:
             try:
                 rca_input = results['processing']['rca_input']
                 
-                logger.info("Generating RCA with Gemini AI...")
-                rca_result = gemini_service.generate_rca(
+                logger.info("Generating RCA with Groq AI...")
+                rca_result = groq_service.generate_rca(
                     incident_description=rca_input.get('incident', ''),
                     severity=rca_input.get('severity', 'medium'),
                     affected_service=rca_input.get('affected_service', 'unknown'),

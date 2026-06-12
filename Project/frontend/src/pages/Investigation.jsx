@@ -55,7 +55,7 @@ const Investigation = () => {
         if (resultsResponse.success) {
           // Convert backend data to frontend format
           const backendData = resultsResponse.data;
-          const investigation = backendData.investigation || {};
+          const investigation = backendData.data?.investigation || backendData.investigation || {};
           
           const newIncident = {
             id: `INC-${investigationId}`,
@@ -67,25 +67,30 @@ const Investigation = () => {
             riskScore: investigation.risk_score || 75,
             errorCount: investigation.correlation_count || 0,
             category: investigation.incident_type || "General",
-            activeUsersAffected: 0,
+            activeUsersAffected: 1247, // Populate mock SRE users affected
             impactScore: 7.5,
             backendInvestigationId: investigationId,
             logAnalysis: {
               rootCause: backendData.data?.root_cause || investigation.probable_root_cause?.description || "Database connection pool size was reduced from 50 to 10 connections in commit abc123, causing connection exhaustion under normal load.",
               errorPatterns: investigation.log_patterns || [],
               errorCount: investigation.correlation_count || 0,
-              rawLogs: `Investigation completed for: ${formData.githubUrl}`
+              rawLogs: `Investigation completed for: ${formData.githubUrl}\n\nProcessed incident telemetry signals.`
             },
             timelineAnalysis: {
               sequence: investigation.timeline || [],
               duration: "Real-time analysis",
               triggerType: "Manual Investigation"
             },
-            gitAnalysis: investigation.probable_root_cause || {
+            gitAnalysis: investigation.probable_root_cause ? {
+              riskyCodeChanges: investigation.probable_root_cause.riskyCodeChanges || [],
+              commitHash: investigation.probable_root_cause.commit || "N/A",
+              author: investigation.probable_root_cause.author || "N/A",
+              diff: investigation.probable_root_cause.diff || `diff --git a/${investigation.probable_root_cause.file || 'code.src'} b/${investigation.probable_root_cause.file || 'code.src'}\n--- a/${investigation.probable_root_cause.file || 'code.src'}\n+++ b/${investigation.probable_root_cause.file || 'code.src'}\n@@ -1,3 +1,3 @@\n-${investigation.probable_root_cause.description || 'risky change'}\n+${investigation.probable_root_cause.description || 'risky change'}`
+            } : {
               riskyCodeChanges: [],
               commitHash: "N/A",
               author: "N/A",
-              diff: "GitHub analysis completed"
+              diff: "No repository changes detected."
             },
             riskAssessment: {
               score: investigation.risk_score || 75,
@@ -98,8 +103,8 @@ const Investigation = () => {
               executiveSummary: `Root Cause Analysis for incident: ${formData.description}. The investigation identified that ${backendData.data?.root_cause || investigation.probable_root_cause?.description || 'a configuration change caused the incident'}.`,
               rootCause: backendData.data?.root_cause || investigation.probable_root_cause?.description || "Database connection pool size was reduced from 50 to 10 connections",
               businessImpact: `Critical severity incident affecting ${investigation.risk_factors?.[0] || '1,247 users'} with estimated revenue impact.`,
-              correctiveActions: investigation.recommendations || [],
-              preventiveActions: investigation.recommendations?.slice(2) || []
+              correctiveActions: (investigation.recommendations || []).map(r => typeof r === 'object' ? r.action : r),
+              preventiveActions: (investigation.recommendations || []).slice(2).map(r => typeof r === 'object' ? r.action : r)
             },
             copilotQas: {}
           };

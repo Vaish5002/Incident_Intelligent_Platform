@@ -9,7 +9,7 @@ const ProgressTracker = ({ onComplete }) => {
     github: { status: 'pending', label: 'GitHub Agent', desc: 'Awaiting initialization...' },
     log: { status: 'pending', label: 'Log Agent', desc: 'Awaiting log file...' },
     investigation: { status: 'pending', label: 'Investigation Agent', desc: 'Awaiting correlation patterns...' },
-    gemini: { status: 'pending', label: 'Gemini Agent', desc: 'Awaiting SRE report generation...' }
+    groq: { status: 'pending', label: 'Groq Agent', desc: 'Awaiting SRE report generation...' }
   });
 
   useEffect(() => {
@@ -64,11 +64,11 @@ const ProgressTracker = ({ onComplete }) => {
       }));
       setProgress(90);
 
-      // Step 4: Gemini Agent (4.5s - 5.5s)
+      // Step 4: Groq Agent (4.5s - 5.5s)
       if (!active) return;
       setAgents(prev => ({
         ...prev,
-        gemini: { status: 'running', label: 'Gemini Agent', desc: 'Compiling SRE recommendations and rendering RCA markdown reports...' }
+        groq: { status: 'running', label: 'Groq Agent', desc: 'Compiling SRE recommendations and rendering RCA markdown reports...' }
       }));
       setProgress(95);
       await new Promise(r => setTimeout(r, 1000));
@@ -76,7 +76,7 @@ const ProgressTracker = ({ onComplete }) => {
       if (!active) return;
       setAgents(prev => ({
         ...prev,
-        gemini: { status: 'completed', label: 'Gemini Agent', desc: 'RCA PDF compilation and AI Recommendations ready.' }
+        groq: { status: 'completed', label: 'Groq Agent', desc: 'RCA PDF compilation and AI Recommendations ready.' }
       }));
       setProgress(100);
       

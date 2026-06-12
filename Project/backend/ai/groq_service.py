@@ -1,8 +1,8 @@
 """
-Gemini AI Service
-Handles all interactions with Google Gemini API
+Groq AI Service
+Handles all interactions with Groq API
 """
-import google.generativeai as genai
+from groq import Groq
 from typing import Dict, Any, Optional
 from loguru import logger
 
@@ -16,34 +16,46 @@ from backend.ai.prompts import (
 )
 
 
-class GeminiService:
-    """Service for interacting with Google Gemini AI"""
+class GroqService:
+    """Service for interacting with Groq AI"""
     
     def __init__(self, api_key: Optional[str] = None):
-        """Initialize Gemini service"""
-        self.api_key = api_key or settings.GEMINI_API_KEY
+        """Initialize Groq service"""
+        self.api_key = api_key or settings.GROQ_API_KEY
         
         if not self.api_key:
-            raise ValueError("GEMINI_API_KEY is required")
+            raise ValueError("GROQ_API_KEY is required")
         
-        # Configure Gemini
-        genai.configure(api_key=self.api_key)
-        
-        # Initialize model
-        self.model = genai.GenerativeModel(settings.GEMINI_MODEL)
-        self.model_name = settings.GEMINI_MODEL
-        
+        # Configure Groq client
+        self.client = Groq(api_key=self.api_key)
+        self.model_name = settings.GROQ_MODEL or "llama-3.3-70b-versatile"
+            
         # Generation config
         self.generation_config = {
             "temperature": settings.TEMPERATURE,
             "max_output_tokens": settings.MAX_TOKENS,
         }
         
-        logger.info(f"Gemini service initialized with model: {settings.GEMINI_MODEL}")
-    
+        logger.info(f"Groq service initialized with model: {self.model_name}")
+        
+    def _generate_content(self, prompt: str) -> str:
+        """Helper to call Groq Chat Completion API"""
+        chat_completion = self.client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model=self.model_name,
+            temperature=settings.TEMPERATURE,
+            max_tokens=settings.MAX_TOKENS,
+        )
+        return chat_completion.choices[0].message.content
+
     def generate_text(self, prompt: str) -> Dict[str, Any]:
         """
-        Generate text using Gemini (generic method)
+        Generate text using Groq (generic method)
         
         Args:
             prompt: Text prompt
@@ -52,14 +64,10 @@ class GeminiService:
             Dictionary with generated text
         """
         try:
-            response = self.model.generate_content(
-                prompt,
-                generation_config=self.generation_config
-            )
-            
+            text = self._generate_content(prompt)
             return {
                 "success": True,
-                "text": response.text
+                "text": text
             }
             
         except Exception as e:
@@ -82,7 +90,7 @@ class GeminiService:
         similar_incidents: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Generate comprehensive Root Cause Analysis using Gemini
+        Generate comprehensive Root Cause Analysis using Groq
         
         Args:
             incident_description: Description of the incident
@@ -99,7 +107,7 @@ class GeminiService:
             Dictionary containing generated RCA
         """
         try:
-            logger.info("Generating RCA with Gemini")
+            logger.info("Generating RCA with Groq")
             
             # Format data for prompt
             github_text = self._format_github_analysis(github_analysis)
@@ -121,19 +129,14 @@ class GeminiService:
                 similar_incidents=similar_text
             )
             
-            # Generate RCA
-            response = self.model.generate_content(
-                prompt,
-                generation_config=self.generation_config
-            )
-            
-            rca_text = response.text
+            # Generate RCA using Groq
+            rca_text = self._generate_content(prompt)
             
             logger.info("RCA generated successfully")
             
             return {
                 "rca_text": rca_text,
-                "model_used": settings.GEMINI_MODEL,
+                "model_used": self.model_name,
                 "prompt_tokens": len(prompt.split()),
                 "success": True
             }
@@ -163,13 +166,10 @@ class GeminiService:
                 timeline_summary=timeline_summary
             )
             
-            response = self.model.generate_content(
-                prompt,
-                generation_config=self.generation_config
-            )
+            rca_text = self._generate_content(prompt)
             
             return {
-                "rca_text": response.text,
+                "rca_text": rca_text,
                 "success": True
             }
             
@@ -198,13 +198,10 @@ class GeminiService:
                 affected_service=affected_service
             )
             
-            response = self.model.generate_content(
-                prompt,
-                generation_config=self.generation_config
-            )
+            recommendations = self._generate_content(prompt)
             
             return {
-                "recommendations": response.text,
+                "recommendations": recommendations,
                 "success": True
             }
             
@@ -237,13 +234,10 @@ class GeminiService:
                 past_incidents=past_incidents_text
             )
             
-            response = self.model.generate_content(
-                prompt,
-                generation_config=self.generation_config
-            )
+            analysis = self._generate_content(prompt)
             
             return {
-                "analysis": response.text,
+                "analysis": analysis,
                 "success": True
             }
             
@@ -272,13 +266,10 @@ class GeminiService:
                 risk_score=risk_score
             )
             
-            response = self.model.generate_content(
-                prompt,
-                generation_config=self.generation_config
-            )
+            prevention_strategy = self._generate_content(prompt)
             
             return {
-                "prevention_strategy": response.text,
+                "prevention_strategy": prevention_strategy,
                 "success": True
             }
             

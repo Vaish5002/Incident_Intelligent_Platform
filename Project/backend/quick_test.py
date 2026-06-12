@@ -1,18 +1,18 @@
 """
-Quick API test
+Quick API test for Groq
 """
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from backend.ai.gemini_service import GeminiService
+from backend.ai.groq_service import GroqService
 
 print("=" * 60)
-print("Quick Gemini API Test")
+print("Quick Groq API Test")
 print("=" * 60)
 
 try:
-    service = GeminiService()
+    service = GroqService()
     print("Service initialized successfully")
     
     print("\n--- Test 1: Quick RCA ---")

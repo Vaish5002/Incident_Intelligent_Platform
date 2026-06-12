@@ -121,7 +121,7 @@ class ComprehensiveRCAResponse(BaseModel):
                         "description": "Database pool size reduced in recent commit"
                     }
                 ],
-                "model_used": "gemini-flash-latest",
+                "model_used": "llama-3.3-70b-versatile",
                 "metadata": {
                     "incident": "Payment failures",
                     "severity": "Critical",

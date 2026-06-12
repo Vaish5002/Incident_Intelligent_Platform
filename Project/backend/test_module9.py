@@ -416,7 +416,7 @@ Session store connection pool size (20) insufficient for peak load.
 - Load testing for session store
 - Automated capacity planning
 """,
-            model_used="gemini-flash-latest"
+            model_used="llama-3.3-70b-versatile"
         )
         
         print("  Incident and RCA stored in knowledge base")

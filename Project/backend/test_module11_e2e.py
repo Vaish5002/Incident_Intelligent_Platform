@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import requests
 import time
-from backend.ai.gemini_service import GeminiService
+from backend.ai.groq_service import GroqService
 from backend.ai.risk_engine import RiskEngine
 from backend.ai.rag_service import RAGService
 from backend.ai.pdf_generator import PDFGenerator
@@ -113,7 +113,7 @@ def scenario_1_db_timeout():
     
     # Initialize services
     init_db()
-    gemini_service = GeminiService()
+    groq_service = GroqService()
     risk_engine = RiskEngine()
     rag_service = RAGService()
     pdf_generator = PDFGenerator()
@@ -354,7 +354,7 @@ def scenario_2_memory_leak():
     member1_url = "http://localhost:8000"
     member3_url = "http://localhost:8002"
     
-    gemini_service = GeminiService()
+    groq_service = GroqService()
     risk_engine = RiskEngine()
     
     results = {
@@ -434,8 +434,8 @@ def scenario_2_memory_leak():
         root_cause_desc = probable_root_cause.get('description', 'Memory leak detected')
         
         try:
-            # Try to get recommendations via Gemini
-            rec_result = gemini_service.generate_recommendations(
+            # Try to get recommendations via Groq
+            rec_result = groq_service.generate_recommendations(
                 root_cause=root_cause_desc,
                 severity="high",
                 affected_service="application"
@@ -497,7 +497,7 @@ def scenario_3_missing_env():
     member1_url = "http://localhost:8000"
     member3_url = "http://localhost:8002"
     
-    gemini_service = GeminiService()
+    groq_service = GroqService()
     
     results = {
         "configuration_issue_detected": False,
@@ -576,7 +576,7 @@ def scenario_3_missing_env():
         
         try:
             # Generate prevention strategy
-            prevention_result = gemini_service.generate_prevention_strategy(
+            prevention_result = groq_service.generate_prevention_strategy(
                 root_cause=root_cause_desc,
                 affected_service="authentication",
                 risk_score=75.0

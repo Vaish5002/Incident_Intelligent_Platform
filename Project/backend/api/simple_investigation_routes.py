@@ -8,14 +8,14 @@ from loguru import logger
 import requests
 from typing import Optional
 
-from backend.ai.gemini_service import GeminiService
+from backend.ai.groq_service import GroqService
 from backend.ai.risk_engine import RiskEngine
 from backend.ai.rag_service import RAGService
 
 router = APIRouter(prefix="/api/investigate", tags=["Investigation"])
 
 # Initialize services
-gemini_service = GeminiService()
+groq_service = GroqService()
 risk_engine = RiskEngine()
 rag_service = RAGService()
 
@@ -38,7 +38,7 @@ async def start_investigation(request: InvestigationRequest):
     2. Analyze GitHub repository (simulated for demo)
     3. Correlate logs + GitHub
     4. Find similar incidents (RAG)
-    5. Generate RCA with Gemini
+    5. Generate RCA with Groq
     6. Calculate risk score
     """
     try:
@@ -132,8 +132,8 @@ async def start_investigation(request: InvestigationRequest):
                 ]
             }
         
-        # Step 5: Generate RCA with Gemini
-        logger.info("Generating RCA with Gemini AI...")
+        # Step 5: Generate RCA with Groq
+        logger.info("Generating RCA with Groq AI...")
         
         log_analysis_summary = {
             "error_patterns": ["Database Timeout", "Connection Pool Exhausted"],
@@ -143,7 +143,7 @@ async def start_investigation(request: InvestigationRequest):
         }
         
         try:
-            rca_result = gemini_service.generate_rca(
+            rca_result = groq_service.generate_rca(
                 incident_description=request.incident_description,
                 severity="CRITICAL",
                 affected_service="Payment Service",

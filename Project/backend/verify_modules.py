@@ -62,18 +62,18 @@ def check_file_content(filepath, required_items, description):
         return False
 
 def verify_module_1():
-    """Verify Module 1: Gemini Integration"""
-    print_header("Module 1: Gemini Integration")
+    """Verify Module 1: Groq Integration"""
+    print_header("Module 1: Groq Integration")
     
     results = []
     
-    # Check gemini_service.py
-    print(f"\n{BOLD}1. Checking gemini_service.py{RESET}")
-    results.append(check_file_exists("ai/gemini_service.py", "Service file"))
+    # Check groq_service.py
+    print(f"\n{BOLD}1. Checking groq_service.py{RESET}")
+    results.append(check_file_exists("ai/groq_service.py", "Service file"))
     
-    if Path("ai/gemini_service.py").exists():
+    if Path("ai/groq_service.py").exists():
         required_classes = [
-            "class GeminiService",
+            "class GroqService",
             "def generate_rca",
             "def generate_quick_rca",
             "def generate_recommendations",
@@ -81,7 +81,7 @@ def verify_module_1():
             "def generate_prevention_strategy"
         ]
         results.append(check_file_content(
-            "ai/gemini_service.py",
+            "ai/groq_service.py",
             required_classes,
             "Required methods"
         ))
@@ -92,8 +92,8 @@ def verify_module_1():
     
     if Path("ai/config.py").exists():
         required_config = [
-            "GEMINI_API_KEY",
-            "GEMINI_MODEL",
+            "GROQ_API_KEY",
+            "GROQ_MODEL",
             "TEMPERATURE",
             "MAX_TOKENS"
         ]
@@ -142,8 +142,8 @@ def verify_module_1():
     results.append(check_file_exists("main.py", "Main app file"))
     
     # Check test file
-    print(f"\n{BOLD}6. Checking test_gemini.py{RESET}")
-    results.append(check_file_exists("test_gemini.py", "Test file"))
+    print(f"\n{BOLD}6. Checking test_groq.py{RESET}")
+    results.append(check_file_exists("test_groq.py", "Test file"))
     
     # Check requirements.txt
     print(f"\n{BOLD}7. Checking requirements.txt{RESET}")
@@ -152,7 +152,7 @@ def verify_module_1():
     if Path("requirements.txt").exists():
         required_deps = [
             "fastapi",
-            "google-generativeai",
+            "groq",
             "pydantic",
             "uvicorn"
         ]
@@ -169,7 +169,7 @@ def verify_module_1():
     print(f"\n{BOLD}Module 1 Summary:{RESET}")
     if passed == total:
         print_success(f"All checks passed ({passed}/{total})")
-        print_success("Module 1: Gemini Integration is COMPLETE ✅")
+        print_success("Module 1: Groq Integration is COMPLETE ✅")
         return True
     else:
         print_warning(f"Some checks failed ({passed}/{total})")
@@ -257,12 +257,12 @@ def check_environment():
         # Check if API key is set
         with open(".env", 'r') as f:
             content = f.read()
-            if "GEMINI_API_KEY" in content and "your_gemini_api_key_here" not in content:
-                print_success("GEMINI_API_KEY appears to be configured")
+            if "GROQ_API_KEY" in content and "your_groq_api_key_here" not in content:
+                print_success("GROQ_API_KEY appears to be configured")
                 results.append(True)
             else:
-                print_warning("GEMINI_API_KEY not configured yet")
-                print_info("Update .env with your Gemini API key to run tests")
+                print_warning("GROQ_API_KEY not configured yet")
+                print_info("Update .env with your Groq API key to run tests")
                 results.append(False)
     else:
         print_warning(".env file not found")
@@ -314,9 +314,9 @@ def main():
     
     print(f"\n{BOLD}Module Status:{RESET}")
     if module1_ok:
-        print_success("Module 1: Gemini Integration - COMPLETE")
+        print_success("Module 1: Groq Integration - COMPLETE")
     else:
-        print_error("Module 1: Gemini Integration - INCOMPLETE")
+        print_error("Module 1: Groq Integration - INCOMPLETE")
     
     if module2_ok:
         print_success("Module 2: RCA Prompt Engineering - COMPLETE")
@@ -336,8 +336,8 @@ def main():
         print_success("✅ Modules 1 & 2 are COMPLETE!")
         print()
         print(f"{BOLD}Ready to test:{RESET}")
-        print("1. Ensure GEMINI_API_KEY is set in .env")
-        print("2. Run: python test_gemini.py")
+        print("1. Ensure GROQ_API_KEY is set in .env")
+        print("2. Run: python test_groq.py")
         print("3. Run: python -m backend.main")
         print("4. Visit: http://localhost:8002/docs")
         print()

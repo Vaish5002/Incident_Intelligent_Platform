@@ -1,6 +1,6 @@
 # SmartOps AI - Agentic Incident Intelligence Platform
 
-An intelligent incident investigation platform that automates root cause analysis by correlating runtime logs, GitHub commits, and historical incidents using AI-powered agents. Built with FastAPI, React, and Google Gemini AI.
+An intelligent incident investigation platform that automates root cause analysis by correlating runtime logs, GitHub commits, and historical incidents using AI-powered agents. Built with FastAPI, React, and Groq Cloud.
 
 ## Overview
 
@@ -9,7 +9,7 @@ SmartOps AI transforms incident response from a manual, time-consuming process i
 ## Key Features
 
 - **Automated Investigation**: Reduces incident analysis time from 2-4 hours to 30 seconds with AI-powered automation
-- **Multi-Agent System**: Coordinated GitHub Agent, Log Agent, Investigation Engine, RAG System, and Gemini AI working together
+- **Multi-Agent System**: Coordinated GitHub Agent, Log Agent, Investigation Engine, RAG System, and Groq AI Service working together
 - **7 Failure Types**: Specialized analysis for Database timeout, Memory leak, CPU spike, API rate limit, Cache storm, Network partition, and Disk I/O bottlenecks
 - **Contextual Analysis**: Intelligent keyword detection adapts investigation approach based on failure type characteristics
 - **Historical Learning**: RAG-based semantic similarity search across 1000+ past incidents for pattern recognition
@@ -40,7 +40,7 @@ Access the live application with these test credentials:
 
 ### Backend
 - **Framework**: FastAPI (Python 3.11+) - High-performance async API
-- **AI/ML**: Google Gemini Pro (LLM), Sentence Transformers (Embeddings)
+- **AI/ML**: Groq Llama 3 (LLM), Sentence Transformers (Embeddings)
 - **Database**: SQLite with SQLAlchemy ORM
 - **Vector Store**: In-memory embedding storage for RAG
 - **PDF Generation**: ReportLab for professional reports
@@ -57,7 +57,7 @@ Access the live application with these test credentials:
 - **Icons**: Lucide React for modern iconography
 
 ### AI Services
-- **Gemini Flash**: Fast responses for real-time analysis
+- **Groq Cloud (Llama 3)**: Fast responses for real-time analysis
 - **Contextual RCA Engine**: Keyword-based failure detection
 - **Risk Scoring**: ML-based severity and impact assessment
 - **RAG System**: Retrieval-Augmented Generation for historical context
@@ -69,7 +69,7 @@ Access the live application with these test credentials:
 Incident_Intelligent_Platform/
 ├── Project/
 │   ├── backend/              # FastAPI backend
-│   │   ├── ai/              # AI services (Gemini, RAG, embeddings)
+│   │   ├── ai/              # AI services (Groq, RAG, embeddings)
 │   │   ├── api/             # API routes
 │   │   ├── database/        # Database models
 │   │   ├── schemas/         # Pydantic schemas
@@ -102,7 +102,7 @@ Incident_Intelligent_Platform/
 - **Python**: 3.11 or higher ([Download](https://www.python.org/downloads/))
 - **Node.js**: 18 or higher ([Download](https://nodejs.org/))
 - **Git**: Latest version ([Download](https://git-scm.com/))
-- **Gemini API Key**: Get from [Google AI Studio](https://makersuite.google.com/app/apikey)
+- **Groq API Key**: Get from [Groq Console](https://console.groq.com/)
 
 ### Installation Steps
 
@@ -125,7 +125,7 @@ pip install -r requirements.txt
 4. Configure environment:
 ```bash
 cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY
+# Edit .env and add your GROQ_API_KEY and GROQ_MODEL
 ```
 
 5. Start backend server:
@@ -290,7 +290,7 @@ graph TB
     end
     
     subgraph "AI Services"
-        K[Gemini AI Service]
+        K[Groq AI Service]
         L[Contextual RCA Engine]
         M[Risk Scoring Engine]
         N[RAG System]
@@ -352,7 +352,7 @@ graph TB
 1. **User Request**: User submits incident description via frontend
 2. **Keyword Detection**: Backend analyzes description to identify failure type
 3. **Contextual RCA**: System generates appropriate RCA based on detected type
-4. **AI Enhancement**: Gemini AI enriches analysis with insights
+4. **AI Enhancement**: Groq AI enriches analysis with insights
 5. **Results**: Complete investigation report with timeline, root cause, and recommendations
 6. **PDF Export**: Professional report available for download
 
@@ -362,7 +362,7 @@ graph TB
 2. **Log Agent**: Processes runtime logs, extracts error patterns, identifies failure signatures
 3. **Investigation Engine**: Correlates events, matches timestamps, calculates risk scores
 4. **RAG System**: Searches similar historical incidents using semantic similarity
-5. **Gemini AI**: Synthesizes findings, generates RCA reports, provides recommendations
+5. **Groq AI**: Synthesizes findings, generates RCA reports, provides recommendations
 6. **Contextual RCA Engine**: Keyword-based detection system that adapts analysis to failure type
 
 ## API Endpoints
@@ -388,7 +388,8 @@ Full API documentation available at: http://localhost:8002/docs
 
 ### Backend Environment Variables (.env)
 ```
-GEMINI_API_KEY=your_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
 API_HOST=0.0.0.0
 API_PORT=8002
 DEBUG=True
@@ -463,7 +464,7 @@ python test_all_7_failures.py  # Test all failure types
 3. Root Directory: `Project/backend`
 4. Build Command: `pip install -r requirements.txt`
 5. Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-6. Add environment variable: `GEMINI_API_KEY=your_api_key`
+6. Add environment variable: `GROQ_API_KEY=your_api_key` and `GROQ_MODEL=llama-3.3-70b-versatile`
 7. Deploy → Get URL: `https://your-app.onrender.com`
 
 **Frontend → Vercel (Free tier):**
@@ -519,8 +520,8 @@ npm run build
 - Deployment infrastructure
 
 ### Member 3: AI & RCA Engine
-- GitHub Agent,Log Agent,Investigation Agent
-- Google Gemini integration
+- GitHub Agent, Log Agent, Investigation Agent
+- Groq AI integration
 - RAG system implementation
 - RCA generation logic
 - Risk scoring engine
@@ -538,7 +539,7 @@ npm run build
 
 ### Backend Issues
 - **Port 8002 in use:** Kill the process or change port in .env
-- **Missing GEMINI_API_KEY:** Add to Project/backend/.env
+- **Missing GROQ_API_KEY:** Add to Project/backend/.env
 - **Module errors:** Activate virtual environment
 
 ### Frontend Issues

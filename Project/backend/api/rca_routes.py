@@ -11,18 +11,18 @@ from backend.schemas.rca import (
     RecommendationRequest,
     RecommendationResponse
 )
-from backend.ai.gemini_service import GeminiService
+from backend.ai.groq_service import GroqService
 from backend.ai.config import settings
 
 router = APIRouter(prefix="/api", tags=["RCA Generation"])
 
-# Initialize Gemini service
+# Initialize Groq service
 try:
-    gemini_service = GeminiService()
-    logger.info("Gemini service initialized successfully")
+    groq_service = GroqService()
+    logger.info("Groq service initialized successfully")
 except Exception as e:
-    logger.error(f"Failed to initialize Gemini service: {e}")
-    gemini_service = None
+    logger.error(f"Failed to initialize Groq service: {e}")
+    groq_service = None
 
 
 @router.post("/generate-rca", response_model=RCAResponse)
@@ -30,7 +30,7 @@ async def generate_rca(request: RCARequest):
     """
     Generate comprehensive Root Cause Analysis (RCA)
     
-    This endpoint accepts incident data and generates a detailed RCA using Gemini AI.
+    This endpoint accepts incident data and generates a detailed RCA using Groq AI.
     
     **Input:**
     - incident: Description of what happened
@@ -50,10 +50,10 @@ async def generate_rca(request: RCARequest):
     - success: Whether generation succeeded
     """
     
-    if not gemini_service:
+    if not groq_service:
         raise HTTPException(
             status_code=503,
-            detail="Gemini service not available. Check GEMINI_API_KEY configuration."
+            detail="Groq service not available. Check GROQ_API_KEY configuration."
         )
     
     try:
@@ -66,7 +66,7 @@ async def generate_rca(request: RCARequest):
         candidates = request.root_cause_candidates or []
         
         # Generate RCA
-        result = gemini_service.generate_rca(
+        result = groq_service.generate_rca(
             incident_description=request.incident,
             severity=request.severity or "medium",
             affected_service=request.affected_service or "unknown",
@@ -106,16 +106,16 @@ async def generate_quick_rca(request: QuickRCARequest):
     Use this for rapid incident triage when you need fast insights.
     """
     
-    if not gemini_service:
+    if not groq_service:
         raise HTTPException(
             status_code=503,
-            detail="Gemini service not available"
+            detail="Groq service not available"
         )
     
     try:
         logger.info("Generating quick RCA")
         
-        result = gemini_service.generate_quick_rca(
+        result = groq_service.generate_quick_rca(
             incident_description=request.incident,
             log_summary=request.logs,
             timeline_summary=request.timeline
@@ -147,16 +147,16 @@ async def generate_recommendations(request: RecommendationRequest):
     Provides immediate, short-term, and long-term action items.
     """
     
-    if not gemini_service:
+    if not groq_service:
         raise HTTPException(
             status_code=503,
-            detail="Gemini service not available"
+            detail="Groq service not available"
         )
     
     try:
         logger.info("Generating recommendations")
         
-        result = gemini_service.generate_recommendations(
+        result = groq_service.generate_recommendations(
             root_cause=request.root_cause,
             severity=request.severity,
             affected_service=request.affected_service
@@ -184,13 +184,13 @@ async def generate_recommendations(request: RecommendationRequest):
 async def health_check():
     """Health check for RCA service"""
     
-    gemini_status = "healthy" if gemini_service else "unavailable"
-    api_key_configured = bool(settings.GEMINI_API_KEY)
+    groq_status = "healthy" if groq_service else "unavailable"
+    api_key_configured = bool(settings.GROQ_API_KEY)
     
     return {
-        "status": "healthy" if gemini_service else "degraded",
+        "status": "healthy" if groq_service else "degraded",
         "service": "SmartOps AI - RCA Engine",
-        "gemini_service": gemini_status,
-        "gemini_api_key_configured": api_key_configured,
-        "model": settings.GEMINI_MODEL
+        "groq_service": groq_status,
+        "groq_api_key_configured": api_key_configured,
+        "model": settings.GROQ_MODEL
     }

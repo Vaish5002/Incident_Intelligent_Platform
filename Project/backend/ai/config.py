@@ -17,9 +17,9 @@ class Settings(BaseSettings):
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8002
     
-    # Google Gemini
-    GEMINI_API_KEY: str = ""
-    GEMINI_MODEL: str = "gemini-flash-latest"  # or gemini-pro-latest for better quality
+    # Groq API Configuration
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
     
     # Database
     DATABASE_URL: str = "sqlite:///./smartops_ai.db"

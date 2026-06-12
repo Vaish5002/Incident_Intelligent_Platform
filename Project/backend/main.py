@@ -63,7 +63,7 @@ async def root():
         "description": "Member 3 - AI & RCA Engine",
         "member": "Member 3",
         "responsibilities": [
-            "Gemini Integration",
+            "Groq Integration",
             "RAG System",
             "RCA Generation",
             "Risk Scoring",
@@ -87,7 +87,7 @@ async def root():
 async def startup_event():
     """Initialize on startup"""
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
-    logger.info(f"Gemini Model: {settings.GEMINI_MODEL}")
+    logger.info(f"Groq Model: {settings.GROQ_MODEL}")
     logger.info(f"Server ready on {settings.API_HOST}:{settings.API_PORT}")
     logger.info(f"Documentation: http://{settings.API_HOST}:{settings.API_PORT}/docs")
 

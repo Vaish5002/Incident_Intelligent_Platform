@@ -94,7 +94,7 @@ def test_module5_knowledge_base():
         recommendations="1. Increase pool size\n2. Add monitoring\n3. Implement gradual rollout",
         prevention_measures="Add configuration validation in CI/CD pipeline",
         rca_text="# Root Cause Analysis\n\n## Summary\nDatabase misconfiguration...",
-        model_used="gemini-flash-latest",
+        model_used="llama-3.3-70b-versatile",
         root_cause_candidates=[
             {"type": "config_change", "confidence": 0.9, "description": "Pool size reduction"}
         ]

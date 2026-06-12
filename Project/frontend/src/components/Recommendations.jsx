@@ -6,6 +6,38 @@ const Recommendations = ({ incident }) => {
 
   // Map recommendations dynamically based on incident type
   const getRemediationTimeline = (incId) => {
+    // If the incident has real backend-generated AI recommendations, use them dynamically
+    if (incident.aiRecommendations && incident.aiRecommendations.length > 0) {
+      const immediate = [];
+      const shortTerm = [];
+      const longTerm = [];
+      
+      incident.aiRecommendations.forEach(rec => {
+        const actionStr = typeof rec === 'object' 
+          ? `${rec.action || rec.description || ''}${rec.impact ? ` (Impact: ${rec.impact})` : ''}`
+          : rec;
+        
+        const priority = typeof rec === 'object' ? (rec.priority || '').toUpperCase() : '';
+        
+        if (priority.includes('IMMEDIATE') || priority.includes('CRITICAL')) {
+          immediate.push(actionStr);
+        } else if (priority.includes('SHORT') || priority.includes('MEDIUM') || priority.includes('SEV')) {
+          shortTerm.push(actionStr);
+        } else {
+          longTerm.push(actionStr);
+        }
+      });
+      
+      // Handle cases where categorization might be uneven
+      if (immediate.length > 0 || shortTerm.length > 0 || longTerm.length > 0) {
+        return {
+          immediate: immediate.length > 0 ? immediate : ["Investigate immediate trace logs and metrics."],
+          shortTerm: shortTerm.length > 0 ? shortTerm : ["Configure automated alerts and unit tests."],
+          longTerm: longTerm.length > 0 ? longTerm : ["Conduct post-mortem and optimize resources."]
+        };
+      }
+    }
+
     switch (incId) {
       case 'INC-3091': // DB Connection pool
         return {

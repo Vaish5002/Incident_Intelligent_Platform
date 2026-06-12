@@ -9,7 +9,7 @@ This guide walks you through deploying SmartOps AI with:
 1. GitHub account (you already have the code pushed)
 2. Render account (sign up at https://render.com)
 3. Vercel account (sign up at https://vercel.com)
-4. Google Gemini API key (from https://makersuite.google.com/app/apikey)
+4. Groq API key (from https://console.groq.com/)
 
 ---
 
@@ -47,15 +47,15 @@ Click **"Advanced"** and add these environment variables:
 | Key | Value |
 |-----|-------|
 | `PYTHON_VERSION` | `3.11.9` |
-| `GEMINI_API_KEY` | `your_gemini_api_key_here` |
-| `GEMINI_MODEL` | `gemini-flash-latest` |
+| `GROQ_API_KEY` | `your_groq_api_key_here` |
+| `GROQ_MODEL` | `llama-3.3-70b-versatile` |
 | `API_HOST` | `0.0.0.0` |
 | `API_PORT` | `8002` |
 | `DEBUG` | `False` |
 | `DATABASE_URL` | `sqlite:///./smartops_ai.db` |
 | `CORS_ORIGINS` | `*` |
 
-**Important:** Replace `your_gemini_api_key_here` with your actual Gemini API key!
+**Important:** Replace `your_groq_api_key_here` with your actual Groq API key!
 
 ### Step 4: Deploy
 
@@ -190,7 +190,7 @@ Monitor URLs:
 ### Backend Issues
 
 **Problem**: "Application failed to respond"
-- **Solution**: Check Render logs, verify GEMINI_API_KEY is set correctly
+- **Solution**: Check Render logs, verify GROQ_API_KEY is set correctly
 
 **Problem**: "Module not found"
 - **Solution**: Verify `requirements.txt` includes all dependencies
@@ -250,7 +250,7 @@ Consider upgrading when:
    - Update `DATABASE_URL` environment variable
 
 2. **Environment Variables**: Use separate production values
-   - Different Gemini API key (with quota management)
+   - Different Groq API key (with quota management)
    - Specific CORS origins (not wildcard)
 
 3. **Monitoring**: Set up alerts
@@ -263,7 +263,7 @@ Consider upgrading when:
 
 5. **Rate Limiting**: Implement API rate limiting
    - Protect against abuse
-   - Manage Gemini API quota
+   - Manage Groq API quota
 
 ---
 
