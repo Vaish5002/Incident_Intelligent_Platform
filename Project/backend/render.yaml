@@ -10,10 +10,10 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
-      - key: GEMINI_API_KEY
+      - key: GROQ_API_KEY
         sync: false
-      - key: GEMINI_MODEL
-        value: gemini-flash-latest
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
       - key: API_HOST
         value: 0.0.0.0
       - key: API_PORT
