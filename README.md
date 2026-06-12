@@ -462,10 +462,9 @@ python test_all_7_failures.py  # Test all failure types
 1. Sign up at https://render.com
 2. New Web Service → Connect GitHub repository
 3. Root Directory: `Project/backend`
-4. Build Command: `pip install -r requirements.txt`
-5. Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-6. Add environment variable: `GROQ_API_KEY=your_api_key` and `GROQ_MODEL=llama-3.3-70b-versatile`
-7. Deploy → Get URL: `https://your-app.onrender.com`
+4. Runtime: `Docker` (Render automatically builds and runs the Dockerfile)
+5. Add environment variables: `GROQ_API_KEY=your_api_key` and `GROQ_MODEL=llama-3.3-70b-versatile`
+6. Deploy → Get URL: `https://your-app.onrender.com`
 
 **Frontend → Vercel (Free tier):**
 1. Sign up at https://vercel.com

@@ -31,11 +31,7 @@ Fill in the following settings:
 - **Region**: Choose closest to you (e.g., Oregon)
 - **Branch**: `main`
 - **Root Directory**: `Project/backend`
-- **Runtime**: `Python 3`
-
-**Build & Deploy:**
-- **Build Command**: `pip install -r requirements.txt`
-- **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- **Runtime**: `Docker`
 
 **Plan:**
 - Select **Free** plan
@@ -46,7 +42,6 @@ Click **"Advanced"** and add these environment variables:
 
 | Key | Value |
 |-----|-------|
-| `PYTHON_VERSION` | `3.11.9` |
 | `GROQ_API_KEY` | `your_groq_api_key_here` |
 | `GROQ_MODEL` | `llama-3.3-70b-versatile` |
 | `API_HOST` | `0.0.0.0` |
