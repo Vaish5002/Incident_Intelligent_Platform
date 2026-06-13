@@ -2,7 +2,19 @@
 Server startup script with proper path configuration
 """
 import sys
+import io
+import os
 from pathlib import Path
+import dotenv
+
+# Load environment variables
+dotenv.load_dotenv()
+
+# Fix Unicode encoding on Windows terminals (cp1252 can't handle ✓ symbols)
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 # Add parent directory to Python path
 parent_dir = Path(__file__).parent.parent

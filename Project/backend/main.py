@@ -16,6 +16,7 @@ from backend.api.copilot_routes import router as copilot_router
 from backend.api.pdf_routes import router as pdf_router
 from backend.api.integration_routes import router as integration_router
 from backend.api.demo_investigate_routes import router as demo_router
+from backend.api.full_investigation_routes import router as full_router
 
 # Configure logging
 logger.remove()
@@ -44,6 +45,7 @@ app.add_middleware(
 )
 
 # Include routers - Demo investigation first (takes precedence)
+app.include_router(full_router)  # FULL investigation with ALL agents
 app.include_router(demo_router)  # Demo investigation endpoint
 app.include_router(rca_router)
 app.include_router(risk_router)
@@ -87,6 +89,14 @@ async def root():
 async def startup_event():
     """Initialize on startup"""
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
+    
+    # Automatically initialize database tables if they do not exist
+    try:
+        from backend.database.connection import init_db
+        init_db()
+    except Exception as db_err:
+        logger.error(f"Failed to auto-initialize database on startup: {db_err}")
+
     logger.info(f"Groq Model: {settings.GROQ_MODEL}")
     logger.info(f"Server ready on {settings.API_HOST}:{settings.API_PORT}")
     logger.info(f"Documentation: http://{settings.API_HOST}:{settings.API_PORT}/docs")

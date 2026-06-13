@@ -141,117 +141,251 @@ async def generate_pdf_from_incident(incident_id: str):
             status_code=503,
             detail="PDF generation not available. Install reportlab: pip install reportlab"
         )
-    
+        
     try:
-        # Try to get incident from knowledge base first (if service available)
-        incident = None
-        if kb_service:
+        inv_description = ""
+        inv_severity = "CRITICAL"
+        inv_risk_score = 92.0
+        inv_confidence = 96.0
+        inv_repo_url = ""
+        affected_service_text = "Production Services"
+        rca_text = ""
+        inv_data = None
+
+        # Try to find in the in-memory investigation stores by ID
+        inv_id_int = None
+        try:
+            inv_id_int = int(incident_id)
+        except ValueError:
+            pass
+
+        if inv_id_int is not None:
             try:
-                incident = kb_service.get_incident(incident_id)
+                from backend.api.demo_investigate_routes import investigation_store as demo_store
+                stored = demo_store.get(inv_id_int)
+                if stored and stored.get("status") == "completed":
+                    inv_data = stored.get("result")
+                    inv_description = stored.get("description", "")
+                    inv_repo_url = stored.get("repo_url", "")
+            except Exception as e:
+                logger.error(f"Error loading from demo investigation store: {e}")
+
+            if not inv_data:
+                try:
+                    from backend.api.full_investigation_routes import investigation_store as full_store
+                    stored = full_store.get(inv_id_int)
+                    if stored and stored.get("status") == "completed":
+                        inv_data = stored.get("result")
+                        inv_description = stored.get("description", "")
+                        inv_repo_url = stored.get("repo_url", "")
+                except Exception as e:
+                    logger.error(f"Error loading from full investigation store: {e}")
+
+        if inv_data:
+            logger.info(f"Generating dynamic PDF using stored investigation data for {incident_id}")
+            inv_severity = inv_data.get("severity", "HIGH")
+            
+            try:
+                inv_risk_score = float(inv_data.get("risk_score", 90.0))
             except:
-                pass  # Not found in KB, will use demo data
-        
-        # Always generate PDF from demo data (since KB is not populated in demo)
-        logger.info(f"Generating demo PDF for investigation {incident_id}")
-        
-        # Create comprehensive demo RCA text
-        rca_text = f"""# Root Cause Analysis Report
+                inv_risk_score = 90.0
+
+            conf_str = inv_data.get("confidence", "90%")
+            try:
+                inv_confidence = float(conf_str.replace("%", ""))
+            except:
+                inv_confidence = 90.0
+
+            incident_type = inv_data.get("incident_type", "System Degradation")
+            probable_cause = inv_data.get("probable_root_cause", {})
+            affected_file = probable_cause.get("file", "N/A")
+            affected_service_text = f"{incident_type} — {affected_file}"
+
+            # Build timeline
+            timeline_md = ""
+            for item in inv_data.get("timeline", []):
+                timeline_md += f"- **{item.get('time', '')}** - {item.get('event', '')}\n"
+
+            # Build log patterns
+            log_patterns_md = ""
+            for pattern in inv_data.get("log_patterns", []):
+                log_patterns_md += f"- `{pattern}`\n"
+
+            # Build code changes details — rich rendering with severity, language, before/after
+            code_changes_md = ""
+            risky_changes = probable_cause.get("riskyCodeChanges", [])
+            if risky_changes:
+                code_changes_md = "\n## Code Changes Causing Failure\n"
+                code_changes_md += (
+                    "The following code changes were identified by the Investigation Engine "
+                    "as the direct cause of the production failures. Each entry shows the "
+                    "file changed, the severity of the change, and the actual code diff.\n\n"
+                )
+                for idx, change in enumerate(risky_changes, 1):
+                    file_name   = change.get("file", "N/A")
+                    line_no     = change.get("line", "N/A")
+                    change_desc = change.get("change", "N/A")
+                    severity    = change.get("severity", "MEDIUM")
+                    commit_sha  = change.get("commit", "N/A")
+                    explanation = change.get("explanation", "N/A")
+                    snippet     = change.get("codeSnippet") or {}
+                    language    = snippet.get("language", "code")
+                    before_code = snippet.get("before", "").strip()
+                    after_code  = snippet.get("after", "").strip()
+
+                    # Section header
+                    code_changes_md += f"\n### [{idx}] {file_name}\n"
+                    code_changes_md += f"- **Severity:** {severity}\n"
+                    code_changes_md += f"- **Commit:** {commit_sha}\n"
+                    code_changes_md += f"- **Line:** {line_no}\n"
+                    code_changes_md += f"- **Language:** {language}\n"
+                    code_changes_md += f"- **Change:** {change_desc}\n\n"
+                    code_changes_md += f"**Why it causes failures:** {explanation}\n\n"
+
+                    # Before block
+                    if before_code and before_code not in ("// No changes", "// No patch available"):
+                        code_changes_md += "**BEFORE (original code):**\n"
+                        code_changes_md += f"```{language}\n{before_code}\n```\n\n"
+                    else:
+                        code_changes_md += "**BEFORE:** *(new file — no previous version)*\n\n"
+
+                    # After block — the problematic new code
+                    if after_code and after_code not in ("// No changes", "// No patch available"):
+                        code_changes_md += "**AFTER (code introduced in this commit — causes failure):**\n"
+                        code_changes_md += f"```{language}\n{after_code}\n```\n\n"
+                    else:
+                        code_changes_md += "**AFTER:** *(no additions recorded)*\n\n"
+
+                    code_changes_md += "---\n"
+
+            # Build recommendations
+            recommendations_md = ""
+            for idx, rec in enumerate(inv_data.get("recommendations", []), 1):
+                recommendations_md += f"{idx}. **{rec.get('priority', '')}**: {rec.get('action', '')} (Impact: {rec.get('impact', '')})\n"
+
+            # Build similar incidents
+            similar_incidents_md = ""
+            for inc in inv_data.get("similar_incidents", []):
+                similar_incidents_md += f"- **{inc.get('id', '')}**: {inc.get('description', '')} (Similarity: {int(inc.get('similarity', 0)*100)}%, Resolution: {inc.get('resolution', '')})\n"
+            if not similar_incidents_md:
+                similar_incidents_md = "No similar incidents found in knowledge base."
+
+            # Compile full rca_text markdown
+            rca_text = f"""# Root Cause Analysis Report
 
 ## Executive Summary
-Investigation #{incident_id} has identified a critical database configuration issue that resulted in connection pool exhaustion and service degradation.
+Investigation #{incident_id} has been completed. The SmartOps AI investigation engine correlated log failures with code changes.
 
-## Root Cause
-Database connection pool size was reduced from 50 to 10 connections in commit abc123 (file: config/database.yml), causing connection exhaustion under normal load. This configuration change was deployed at 9:00 AM, and first timeout errors appeared at 9:15 AM.
+**RCA Detail:**
+{inv_data.get('root_cause', '')}
+
+## Root Cause Identification
+{probable_cause.get('description', '')}
+
+- **Commit SHA:** {probable_cause.get('commit', 'N/A')}
+- **File:** {probable_cause.get('file', 'N/A')}
+- **Author:** {probable_cause.get('author', 'N/A')}
+- **Date/Time:** {probable_cause.get('timestamp', 'N/A')}
 
 ## Timeline of Events
-- **09:00 AM** - Deployment of Build #4523
-- **09:00 AM** - Configuration change: DB pool reduced from 50 to 10 connections
-- **09:15 AM** - First database timeout errors detected
-- **09:30 AM** - Payment service failures escalated
-- **09:45 AM** - Incident affecting 1,247 users
+{timeline_md}
 
 ## Evidence
 **Log Patterns Identified:**
-- Database Timeout: Connection pool exhausted
-- Failed to acquire connection after 30s
-- Pool Exhausted: 0/10 connections available
+{log_patterns_md if log_patterns_md else "No log patterns identified."}
 
-**Code Changes:**
-- Commit: abc123
-- File: config/database.yml
-- Change: DB_POOL_SIZE: 50 → 10
-- Risk Level: HIGH
+**Git Diff:**
+```diff
+{probable_cause.get('diff', 'No git diff available.')}
+```
+{code_changes_md}
 
 ## Impact Analysis
-- **Severity:** CRITICAL
-- **Users Affected:** 1,247 users
-- **Revenue Impact:** $12,500 estimated loss
-- **Service Degradation:** 87% failure rate
-- **Affected Service:** Payment processing and database operations
+- **Severity:** {inv_severity}
+- **Factors:** {', '.join(inv_data.get('risk_factors', [])) if inv_data.get('risk_factors') else 'N/A'}
+- **Risk Score:** {inv_risk_score:.1f}/100
+- **Confidence Level:** {inv_confidence:.0f}%
 
 ## Recommendations
-
-### Immediate Actions (Priority: CRITICAL)
-1. **Rollback commit abc123** - Restore database pool configuration
-   - Expected Resolution Time: 5 minutes
-   - Impact: Immediate service restoration
-
-### Short-Term Actions (Priority: HIGH)
-2. **Increase database pool size to 50 connections**
-   - Ensures capacity for normal traffic load
-   - Prevents similar exhaustion issues
-
-### Medium-Term Actions (Priority: MEDIUM)
-3. **Implement connection pool monitoring**
-   - Set threshold alerts at 80% capacity
-   - Enable proactive monitoring
-   - Early warning system for capacity issues
-
-### Long-Term Actions (Priority: LOW)
-4. **Implement auto-scaling for database connections**
-   - Dynamic resource allocation based on load
-   - Prevents manual configuration errors
-   - Improves resilience
+{recommendations_md}
 
 ## Similar Historical Incidents
-**INC-2026-0415-047:** Database pool exhausted (95% similarity)
-- Resolution: Increased pool size to 50
-- Outcome: Resolved in 15 minutes
-
-**INC-2026-0322-089:** Connection timeout spike (87% similarity)
-- Resolution: Added connection monitoring
-- Outcome: Prevented future occurrences
+{similar_incidents_md}
 
 ## Prevention Plan
-1. Implement code review requirements for configuration changes
-2. Add automated testing for connection pool capacity
-3. Establish minimum pool size standards
-4. Create runbook for similar incidents
+1. Add CI/CD validation gates for the changed configuration or code pattern.
+2. Implement monitoring alerts with early warning thresholds.
+3. Require peer code review for all changes to affected files.
+4. Run load testing post-deploy to validate system behaviour under production conditions.
 
 ## Conclusion
-The incident was caused by a configuration change that reduced database connection pool capacity below operational requirements. The fix is straightforward (rollback or increase pool size), and implementation of monitoring will prevent recurrence.
-
-**Confidence Level:** 96%
-**Analysis Completed:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-**Generated by:** SmartOps AI Investigation Engine
+This incident was caused by a code or configuration change in commit {probable_cause.get('commit', 'N/A')} that was not adequately tested under production conditions.
 """
-        
-        # Generate PDF with demo data
+        else:
+            # Try to get incident from knowledge base first (if service available)
+            incident = None
+            if kb_service:
+                try:
+                    incident = kb_service.get_incident(incident_id)
+                except:
+                    pass  # Not found in KB, will use fallback
+
+            if incident:
+                logger.info(f"Generating PDF from Knowledge Base incident {incident_id}")
+                inv_description = incident.get("description", "Production incident detected and investigated by SmartOps AI")
+                inv_severity = incident.get("severity", "CRITICAL")
+                try:
+                    inv_risk_score = float(incident.get("risk_score", 92.0))
+                except:
+                    inv_risk_score = 92.0
+                try:
+                    inv_confidence = float(incident.get("confidence", 96.0))
+                except:
+                    inv_confidence = 96.0
+                inv_repo_url = incident.get("repo_url", "N/A")
+                affected_service_text = incident.get("affected_service", "Production Services")
+                rca_text = incident.get("rca_text", f"# Root Cause Analysis Report\n\n## Executive Summary\n{inv_description}")
+            else:
+                # Fallback: no stored investigation — use generic report
+                logger.warning(f"No stored investigation data for {incident_id}, using fallback report")
+                inv_description = "Production incident detected and investigated by SmartOps AI"
+                inv_severity = "CRITICAL"
+                inv_risk_score = 92.0
+                inv_confidence = 96.0
+                affected_service_text = "Production Services"
+                rca_text = f"""# Root Cause Analysis Report
+
+## Executive Summary
+Investigation #{incident_id} has been completed. A production incident was detected and analysed by the SmartOps AI multi-agent system.
+
+## Root Cause
+Root cause analysis was performed using AI-powered correlation of GitHub commits and production logs. Please refer to the Investigation Results page in the SmartOps UI for full details including code snippets and commit links.
+
+## Recommendations
+1. Review the Investigation Results page for detailed code changes.
+2. Rollback any recent commits that correlate with the incident timeline.
+3. Add monitoring and alerting based on the identified failure patterns.
+
+Analysis Completed: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+Generated by: SmartOps AI Investigation Engine
+"""
+
+        # Generate PDF with dynamic data
         pdf_buffer = pdf_generator.generate_rca_pdf(
             incident_id=incident_id,
-            incident_description="Database timeout in chaos platform after recent deployment",
+            incident_description=inv_description or "Production incident investigated by SmartOps AI",
             rca_text=rca_text,
-            severity="CRITICAL",
-            risk_score=92.0,
-            confidence=96.0,
-            affected_service="Database & Payment Services",
-            occurred_at=datetime.now().strftime("%Y-%m-%dT09:00:00"),
+            severity=inv_severity,
+            risk_score=inv_risk_score,
+            confidence=inv_confidence,
+            affected_service=affected_service_text,
+            occurred_at=datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
             resolved_at=None,
             metadata={
-                "investigation_type": "Automated",
-                "github_repo": "chaos-demo-platform",
-                "correlation_count": 127,
-                "similar_incidents": 2
+                "investigation_type": "Automated Multi-Agent",
+                "github_repo": inv_repo_url or "N/A",
+                "correlation_count": inv_data.get("correlation_count", 0) if inv_data else 0,
+                "similar_incidents": len(inv_data.get("similar_incidents", [])) if inv_data else 0
             }
         )
         

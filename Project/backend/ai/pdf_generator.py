@@ -237,12 +237,76 @@ class PDFGenerator:
             subheading_style: Subheading style
             body_style: Body text style
         """
+        from html import escape
         lines = rca_text.split('\n')
         current_section = []
+        in_code_block = False
+        code_block_lines = []
         
         for line in lines:
-            line = line.strip()
+            stripped_line = line.strip()
             
+            # Check for code block boundary
+            if stripped_line.startswith('```'):
+                if in_code_block:
+                    # End of code block - process and add to elements
+                    in_code_block = False
+                    
+                    formatted_lines = []
+                    for cl in code_block_lines:
+                        # Replace tabs with spaces
+                        cl_processed = cl.replace('\t', '    ')
+                        # Count leading spaces to preserve indentation
+                        leading_spaces = len(cl_processed) - len(cl_processed.lstrip(' '))
+                        if leading_spaces > 0:
+                            escaped_line = '&nbsp;' * leading_spaces + escape(cl_processed[leading_spaces:])
+                        else:
+                            escaped_line = escape(cl_processed)
+                        formatted_lines.append(escaped_line)
+                    
+                    code_html = "<br/>".join(formatted_lines)
+                    
+                    # Monospace code block styling
+                    code_paragraph_style = ParagraphStyle(
+                        'CodeBlockStyle',
+                        fontName='Courier',
+                        fontSize=8.5,
+                        leading=10.5,
+                        textColor=colors.HexColor('#2c3e50')
+                    )
+                    
+                    p = Paragraph(code_html, code_paragraph_style)
+                    t = Table([[p]], colWidths=[6.5 * inch])
+                    t.setStyle(TableStyle([
+                        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#f8f9fa')),
+                        ('BOX', (0, 0), (-1, -1), 0.5, colors.HexColor('#e9ecef')),
+                        ('LEFTPADDING', (0, 0), (-1, -1), 8),
+                        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+                        ('TOPPADDING', (0, 0), (-1, -1), 8),
+                        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+                        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                    ]))
+                    elements.append(t)
+                    elements.append(Spacer(1, 0.15 * inch))
+                    code_block_lines = []
+                else:
+                    # Start of code block
+                    in_code_block = True
+                    code_block_lines = []
+                    
+                    # Flush any current paragraph text before starting code block
+                    if current_section:
+                        section_text = ' '.join(current_section)
+                        if section_text:
+                            elements.append(Paragraph(self._clean_markdown(section_text), body_style))
+                        current_section = []
+                continue
+            
+            if in_code_block:
+                code_block_lines.append(line)
+                continue
+                
+            line = line.strip()
             if not line:
                 if current_section:
                     # Add accumulated section content

@@ -1,6 +1,10 @@
 from github import Github
 import re
 import os
+import dotenv
+
+# Load environment variables
+dotenv.load_dotenv()
 
 # Get GitHub token from environment variable
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
@@ -61,6 +65,7 @@ def get_github_analysis(repo_url, limit=20):
                         config_changes.append({
                             "commit": commit.sha[:7],
                             "file": file.filename,
+                            "author": commit.commit.author.name,
                             "changes": detected_changes,
                             "timestamp": str(commit.commit.author.date)
                         })
