@@ -8,15 +8,15 @@ from loguru import logger
 import sys
 
 from ai.config import settings
-from backend.api.rca_routes import router as rca_router
-from backend.api.risk_routes import router as risk_router
-from backend.api.knowledge_routes import router as knowledge_router
-from backend.api.rag_routes import router as rag_router
-from backend.api.copilot_routes import router as copilot_router
-from backend.api.pdf_routes import router as pdf_router
-from backend.api.integration_routes import router as integration_router
-from backend.api.demo_investigate_routes import router as demo_router
-from backend.api.full_investigation_routes import router as full_router
+from api.rca_routes import router as rca_router
+from api.risk_routes import router as risk_router
+from api.knowledge_routes import router as knowledge_router
+from api.rag_routes import router as rag_router
+from api.copilot_routes import router as copilot_router
+from api.pdf_routes import router as pdf_router
+from api.integration_routes import router as integration_router
+from api.demo_investigate_routes import router as demo_router
+from api.full_investigation_routes import router as full_router
 
 # Configure logging
 logger.remove()
