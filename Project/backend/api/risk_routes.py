@@ -10,9 +10,9 @@ from backend.schemas.risk import (
     ComprehensiveRCARequest,
     ComprehensiveRCAResponse
 )
-from backend.schemas.rca import QuickRCARequest, RCAResponse
-from backend.ai.risk_engine import RiskEngine
-from backend.ai.rca_generator import RCAGenerator
+from schemas.rca import QuickRCARequest, RCAResponse
+from ai.risk_engine import RiskEngine
+from ai.rca_generator import RCAGenerator
 
 router = APIRouter(prefix="/api", tags=["Risk & RCA Generation"])
 
