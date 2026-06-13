@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Backend API URLs - Use environment variable or fallback to localhost
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8002';
-const MEMBER1_API_URL = 'http://localhost:8000'; // Member 1 - Investigation Backend
+const MEMBER1_API_URL = import.meta.env.VITE_MEMBER1_API_URL || 'http://localhost:8000'; // Member 1 - Investigation Backend
 const MEMBER3_API_URL = `${API_BASE_URL}/api`; // Member 3 - AI/RCA Engine
 
 // Configure axios defaults

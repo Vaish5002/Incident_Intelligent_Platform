@@ -67,33 +67,62 @@ Access the live application with these test credentials:
 
 ```
 Incident_Intelligent_Platform/
-├── Project/
-│   ├── backend/              # FastAPI backend
-│   │   ├── ai/              # AI services (Groq, RAG, embeddings)
-│   │   ├── api/             # API routes
-│   │   ├── database/        # Database models
-│   │   ├── schemas/         # Pydantic schemas
-│   │   ├── main.py          # FastAPI application
-│   │   ├── run_server.py    # Server startup
-│   │   └── requirements.txt # Python dependencies
-│   │
-│   ├── frontend/            # React frontend
-│   │   ├── src/
-│   │   │   ├── components/  # React components
-│   │   │   ├── pages/       # Page components
-│   │   │   ├── services/    # API services
-│   │   │   └── context/     # State management
-│   │   ├── package.json     # Node dependencies
-│   │   └── vite.config.js   # Vite configuration
-│   │
-│   └── agents/              # Investigation agents
-│       ├── github_agent.py
-│       ├── log_agent.py
-│       ├── investigation_engine.py
-│       └── timeline_agent.py
+├── Documents/                          # Project documentation
+│   ├── SMARTOPS AI ARCHITECTURE.pdf
+│   ├── SMARTOPS AI TESTCASES.pdf
+│   └── SMARTOPS AI WORKFLOW.pdf
 │
-└── README.md                # This file
+├── Project/                            # Main application code
+│   │
+│   ├── backend/                        # Backend API (Python/FastAPI)
+│   │   ├── agents/                     # Investigation agents
+│   │   │   ├── github_agent.py         # GitHub commit analysis
+│   │   │   ├── log_agent.py            # Log processing
+│   │   │   ├── investigation_engine.py # Investigation orchestration
+│   │   │   └── timeline_agent.py       # Timeline construction
+│   │   ├── ai/                         # AI services
+│   │   │   ├── gemini_service.py       # Google Gemini integration
+│   │   │   ├── rag_service.py          # RAG system
+│   │   │   ├── rca_generator.py        # RCA generation
+│   │   │   ├── risk_engine.py          # Risk assessment
+│   │   │   └── pdf_generator.py        # PDF reports
+│   │   ├── api/                        # API routes
+│   │   │   ├── demo_investigate_routes.py  # Main investigation API
+│   │   │   ├── rca_routes.py
+│   │   │   └── pdf_routes.py
+│   │   ├── database/                   # Database models
+│   │   ├── schemas/                    # Pydantic schemas
+│   │   ├── main.py                     # FastAPI application
+│   │   ├── requirements.txt            # Python dependencies
+│   │   ├── render.yaml                 # Render deployment config
+│   │   └── README.md                   # Backend documentation
+│   │
+│   ├── frontend/                       # Frontend UI (React/Vite)
+│   │   ├── src/
+│   │   │   ├── components/             # React components
+│   │   │   ├── pages/                  # Page components
+│   │   │   ├── services/               # API integration
+│   │   │   └── context/                # State management
+│   │   ├── package.json                # Node dependencies
+│   │   ├── vercel.json                 # Vercel deployment config
+│   │   └── README.md                   # Frontend documentation
+│   │
+│   └── tests/                          # Test scripts
+│       └── test_all_7_failures.py
+│
+├── Team-Details/                       # Team information
+├── Video/                              # Demo video link
+├── .gitignore
+├── README.md                           # This file (main documentation)
+├── DEPLOYMENT_GUIDE.md                 # Detailed deployment guide
+└── STEP_BY_STEP_DEPLOYMENT.md         # Step-by-step deploy instructions
 ```
+
+**Key Points:**
+- Backend is self-contained with all agents included
+- Frontend is deployment-ready with Vercel config
+- Each subfolder has its own README for detailed info
+- Deployment configs included (render.yaml, vercel.json)
 
 ## Quick Start
 
