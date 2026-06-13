@@ -15,7 +15,7 @@ backend/
 │   └── timeline_agent.py
 ├── ai/                  # AI services
 │   ├── config.py
-│   ├── gemini_service.py
+│   ├── groq_service.py
 │   ├── rag_service.py
 │   ├── rca_generator.py
 │   ├── risk_engine.py
@@ -59,7 +59,7 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY
+# Edit .env and add your GROQ_API_KEY
 ```
 
 ### 3. Run Server
@@ -74,10 +74,10 @@ API Docs: http://localhost:8002/docs
 ## Environment Variables
 
 Required:
-- `GEMINI_API_KEY` - Google Gemini API key
+- `GROQ_API_KEY` - Groq API key (get from https://console.groq.com/keys)
 
 Optional:
-- `GEMINI_MODEL` - Model name (default: gemini-flash-latest)
+- `GROQ_MODEL` - Model name (default: llama-3.3-70b-versatile)
 - `API_HOST` - Host address (default: 0.0.0.0)
 - `API_PORT` - Port number (default: 8002)
 - `DEBUG` - Debug mode (default: True)
@@ -136,7 +136,7 @@ python test_api_endpoints.py
 ## Tech Stack
 
 - FastAPI - Web framework
-- Google Gemini Pro - LLM
+- Groq Llama 3 - LLM
 - SQLite - Database
 - SQLAlchemy - ORM
 - Sentence Transformers - Embeddings

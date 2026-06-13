@@ -81,7 +81,7 @@ Incident_Intelligent_Platform/
 │   │   │   ├── investigation_engine.py # Investigation orchestration
 │   │   │   └── timeline_agent.py       # Timeline construction
 │   │   ├── ai/                         # AI services
-│   │   │   ├── gemini_service.py       # Google Gemini integration
+│   │   │   ├── groq_service.py         # Groq LLM integration
 │   │   │   ├── rag_service.py          # RAG system
 │   │   │   ├── rca_generator.py        # RCA generation
 │   │   │   ├── risk_engine.py          # Risk assessment
@@ -131,7 +131,7 @@ Incident_Intelligent_Platform/
 - **Python**: 3.11 or higher ([Download](https://www.python.org/downloads/))
 - **Node.js**: 18 or higher ([Download](https://nodejs.org/))
 - **Git**: Latest version ([Download](https://git-scm.com/))
-- **Groq API Key**: Get from [Groq Console](https://console.groq.com/)
+- **Groq API Key**: Get from [Groq Console](https://console.groq.com/keys)
 
 ### Installation Steps
 
@@ -491,9 +491,11 @@ python test_all_7_failures.py  # Test all failure types
 1. Sign up at https://render.com
 2. New Web Service → Connect GitHub repository
 3. Root Directory: `Project/backend`
-4. Runtime: `Docker` (Render automatically builds and runs the Dockerfile)
-5. Add environment variables: `GROQ_API_KEY=your_api_key` and `GROQ_MODEL=llama-3.3-70b-versatile`
-6. Deploy → Get URL: `https://your-app.onrender.com`
+4. Runtime: `Python 3`
+5. Build Command: `pip install -r requirements.txt`
+6. Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+7. Add environment variables: `GROQ_API_KEY=your_api_key` and `GROQ_MODEL=llama-3.3-70b-versatile`
+8. Deploy → Get URL: `https://your-app.onrender.com`
 
 **Frontend → Vercel (Free tier):**
 1. Sign up at https://vercel.com
