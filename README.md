@@ -485,28 +485,53 @@ python test_all_7_failures.py  # Test all failure types
 
 ## Deployment
 
-### Quick Deploy to Cloud
+### Quick Deploy to Cloud (FREE)
 
-**Backend → Render (Free tier):**
+**Time Required**: 15-20 minutes
+
+#### Backend → Render (Free tier)
 1. Sign up at https://render.com
-2. New Web Service → Connect GitHub repository
-3. Root Directory: `Project/backend`
-4. Runtime: `Python 3`
-5. Build Command: `pip install -r requirements.txt`
-6. Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-7. Add environment variables: `GROQ_API_KEY=your_api_key` and `GROQ_MODEL=llama-3.3-70b-versatile`
-8. Deploy → Get URL: `https://your-app.onrender.com`
+2. Click **"New +"** → **"Web Service"**
+3. Connect your GitHub repository
+4. Configure:
+   - **Name**: `smartops-ai-backend`
+   - **Root Directory**: `Project/backend`
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+5. Add environment variables:
+   - `PYTHON_VERSION` = `3.11.9`
+   - `GROQ_API_KEY` = Your API key from https://console.groq.com/keys
+   - `GROQ_MODEL` = `llama-3.3-70b-versatile`
+   - `CORS_ORIGINS` = `*`
+6. Click **"Create Web Service"**
+7. Wait 3-4 minutes for deployment
+8. Copy your backend URL: `https://your-app.onrender.com`
 
-**Frontend → Vercel (Free tier):**
+#### Frontend → Vercel (Free tier)
 1. Sign up at https://vercel.com
-2. New Project → Import from GitHub
-3. Root Directory: `Project/frontend`
-4. Framework: Vite
-5. Install Command: `npm install --legacy-peer-deps`
-6. Environment Variable: `VITE_API_URL=https://your-backend.onrender.com`
-7. Deploy → Get URL: `https://your-app.vercel.app`
+2. Click **"Add New..."** → **"Project"**
+3. Import your GitHub repository
+4. Configure:
+   - **Project Name**: `smartops-ai`
+   - **Root Directory**: `Project/frontend`
+   - **Framework**: Vite (auto-detected)
+   - **Build Command**: `npm run build`
+   - **Install Command**: `npm install --legacy-peer-deps`
+5. Add environment variable:
+   - `VITE_API_URL` = Your Render backend URL (from step 8 above)
+6. Click **"Deploy"**
+7. Wait 1-2 minutes for deployment
+8. Your app is live: `https://your-app.vercel.app`
 
-**Complete deployment guide:** See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions with screenshots and troubleshooting.
+#### Test Your Deployment
+1. Visit your Vercel URL
+2. Login with: `operator@smartops.ai` / `password123`
+3. Navigate to Investigation
+4. Enter GitHub URL and description
+5. Click Investigate and verify results
+
+**Note**: Render free tier has 30-60 second cold start after 15 minutes of inactivity. This is normal behavior.
 
 ### Local Development
 ```bash
