@@ -4,7 +4,7 @@ Risk Assessment and RCA Generation API Routes
 from fastapi import APIRouter, HTTPException
 from loguru import logger
 
-from backend.schemas.risk import (
+from schemas.risk import (
     RiskRequest,
     RiskResponse,
     ComprehensiveRCARequest,
