@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 import sys
 
-from backend.ai.config import settings
+from ai.config import settings
 from backend.api.rca_routes import router as rca_router
 from backend.api.risk_routes import router as risk_router
 from backend.api.knowledge_routes import router as knowledge_router
