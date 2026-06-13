@@ -4,15 +4,15 @@ RCA API Routes
 from fastapi import APIRouter, HTTPException
 from loguru import logger
 
-from backend.schemas.rca import (
+from schemas.rca import (
     RCARequest,
     RCAResponse,
     QuickRCARequest,
     RecommendationRequest,
     RecommendationResponse
 )
-from backend.ai.groq_service import GroqService
-from backend.ai.config import settings
+from ai.groq_service import GroqService
+from ai.config import settings
 
 router = APIRouter(prefix="/api", tags=["RCA Generation"])
 

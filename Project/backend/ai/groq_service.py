@@ -6,8 +6,8 @@ from groq import Groq
 from typing import Dict, Any, Optional
 from loguru import logger
 
-from backend.ai.config import settings
-from backend.ai.prompts import (
+from ai.config import settings
+from ai.prompts import (
     build_rca_prompt,
     build_quick_rca_prompt,
     RECOMMENDATION_PROMPT,

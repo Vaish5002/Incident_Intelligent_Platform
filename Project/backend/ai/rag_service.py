@@ -6,10 +6,10 @@ from typing import List, Dict, Any, Optional
 from loguru import logger
 from sqlalchemy.orm import Session
 
-from backend.ai.embedding_service import EmbeddingService
-from backend.ai.knowledge_base import KnowledgeBaseService
-from backend.database.connection import get_db_session
-from backend.database.models import Incident, KnowledgeBase, SimilarIncident
+from ai.embedding_service import EmbeddingService
+from ai.knowledge_base import KnowledgeBaseService
+from database.connection import get_db_session
+from database.models import Incident, KnowledgeBase, SimilarIncident
 
 
 class RAGService:

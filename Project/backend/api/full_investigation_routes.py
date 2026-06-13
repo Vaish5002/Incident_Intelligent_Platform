@@ -9,10 +9,10 @@ import random
 from typing import Optional
 
 # Import the REAL agents
-from backend.agents.github_agent import get_github_analysis
-from backend.agents.log_agent import get_logs, get_failures
-from backend.ai.risk_engine import RiskEngine
-from backend.ai.rca_generator import RCAGenerator
+from agents.github_agent import get_github_analysis
+from agents.log_agent import get_logs, get_failures
+from ai.risk_engine import RiskEngine
+from ai.rca_generator import RCAGenerator
 
 router = APIRouter(prefix="/api", tags=["Full Investigation"])
 

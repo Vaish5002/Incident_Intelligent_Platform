@@ -6,7 +6,7 @@ from typing import Dict, Any, Optional
 import requests
 from loguru import logger
 
-from backend.ai.config import settings
+from ai.config import settings
 
 
 class Member1IntegrationService:

@@ -5,8 +5,8 @@ Interactive incident assistant powered by Groq
 from typing import Dict, Any, Optional, List
 from loguru import logger
 
-from backend.ai.groq_service import GroqService
-from backend.ai.rag_service import RAGService
+from ai.groq_service import GroqService
+from ai.rag_service import RAGService
 
 
 class CopilotService:

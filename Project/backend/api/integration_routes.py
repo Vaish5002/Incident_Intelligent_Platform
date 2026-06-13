@@ -6,10 +6,10 @@ from fastapi import APIRouter, HTTPException
 from loguru import logger
 from typing import Optional
 
-from backend.ai.member1_integration import Member1IntegrationService
-from backend.ai.groq_service import GroqService
-from backend.ai.risk_engine import RiskEngine
-from backend.ai.rag_service import RAGService
+from ai.member1_integration import Member1IntegrationService
+from ai.groq_service import GroqService
+from ai.risk_engine import RiskEngine
+from ai.rag_service import RAGService
 
 router = APIRouter(prefix="/api/integration", tags=["Member 1 Integration"])
 

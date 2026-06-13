@@ -5,8 +5,8 @@ Generates comprehensive Root Cause Analysis reports
 from typing import Dict, Any, Optional, List
 from loguru import logger
 
-from backend.ai.groq_service import GroqService
-from backend.ai.risk_engine import RiskEngine
+from ai.groq_service import GroqService
+from ai.risk_engine import RiskEngine
 
 
 class RCAGenerator:

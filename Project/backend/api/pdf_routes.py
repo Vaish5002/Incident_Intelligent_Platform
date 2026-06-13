@@ -8,8 +8,8 @@ from typing import Optional, List, Dict, Any
 from loguru import logger
 from datetime import datetime
 
-from backend.ai.pdf_generator import PDFGenerator
-from backend.ai.knowledge_base import KnowledgeBaseService
+from ai.pdf_generator import PDFGenerator
+from ai.knowledge_base import KnowledgeBaseService
 
 router = APIRouter(prefix="/api/pdf", tags=["PDF Generation"])
 

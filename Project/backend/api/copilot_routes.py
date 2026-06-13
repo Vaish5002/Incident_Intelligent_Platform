@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 from loguru import logger
 
-from backend.ai.copilot_service import CopilotService
+from ai.copilot_service import CopilotService
 
 router = APIRouter(prefix="/api/copilot", tags=["AI Copilot"])
 

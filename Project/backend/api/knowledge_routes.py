@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from loguru import logger
 from typing import List
 
-from backend.schemas.knowledge import (
+from schemas.knowledge import (
     IncidentCreate,
     RCAReportCreate,
     KnowledgeEntryCreate,
@@ -18,9 +18,9 @@ from backend.schemas.knowledge import (
     SearchRequest,
     SearchResponse
 )
-from backend.ai.knowledge_base import KnowledgeBaseService
-from backend.ai.embedding_service import EmbeddingService
-from backend.database.connection import init_db
+from ai.knowledge_base import KnowledgeBaseService
+from ai.embedding_service import EmbeddingService
+from database.connection import init_db
 
 router = APIRouter(prefix="/api/knowledge", tags=["Knowledge Base & Embeddings"])
 

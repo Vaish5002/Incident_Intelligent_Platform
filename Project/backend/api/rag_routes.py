@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any
 from loguru import logger
 
-from backend.ai.rag_service import RAGService
+from ai.rag_service import RAGService
 
 router = APIRouter(prefix="/api/rag", tags=["RAG Retrieval"])
 

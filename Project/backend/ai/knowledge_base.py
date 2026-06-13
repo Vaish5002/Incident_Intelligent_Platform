@@ -7,8 +7,8 @@ from datetime import datetime
 from loguru import logger
 from sqlalchemy.orm import Session
 
-from backend.database.models import Incident, RCAReport, KnowledgeBase, SimilarIncident
-from backend.database.connection import get_db_session
+from database.models import Incident, RCAReport, KnowledgeBase, SimilarIncident
+from database.connection import get_db_session
 
 
 class KnowledgeBaseService:
