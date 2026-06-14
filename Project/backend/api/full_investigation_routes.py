@@ -764,7 +764,7 @@ async def inject_failure_proxy(request: ChaosInjectionRequest):
     Proxy chaos failure injection to the configured PROJECT2_URL (Chaos Demo Platform)
     """
     import requests
-    from backend.agents.log_agent import PROJECT2_URL
+    from agents.log_agent import PROJECT2_URL
     
     # Map 'db_timeout' -> 'db-timeout', 'memory_leak' -> 'memory-leak', etc.
     failure_type_hyphenated = request.type.replace("_", "-")

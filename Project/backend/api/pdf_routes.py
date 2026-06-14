@@ -161,7 +161,7 @@ async def generate_pdf_from_incident(incident_id: str):
 
         if inv_id_int is not None:
             try:
-                from backend.api.demo_investigate_routes import investigation_store as demo_store
+                from api.demo_investigate_routes import investigation_store as demo_store
                 stored = demo_store.get(inv_id_int)
                 if stored and stored.get("status") == "completed":
                     inv_data = stored.get("result")
@@ -172,7 +172,7 @@ async def generate_pdf_from_incident(incident_id: str):
 
             if not inv_data:
                 try:
-                    from backend.api.full_investigation_routes import investigation_store as full_store
+                    from api.full_investigation_routes import investigation_store as full_store
                     stored = full_store.get(inv_id_int)
                     if stored and stored.get("status") == "completed":
                         inv_data = stored.get("result")

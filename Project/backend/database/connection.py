@@ -5,8 +5,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from loguru import logger
 
-from backend.ai.config import settings
-from backend.database.models import Base
+from ai.config import settings
+from database.models import Base
 
 # Create engine
 engine = create_engine(
