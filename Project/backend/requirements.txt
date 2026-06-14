@@ -29,3 +29,7 @@ reportlab==4.2.5
 
 # Date/Time
 python-dateutil==2.9.0
+
+# ML/Embeddings (for RAG similarity search)
+numpy==1.26.4
+scikit-learn==1.5.2
