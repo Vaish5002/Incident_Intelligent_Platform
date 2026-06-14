@@ -76,7 +76,7 @@ async def root():
             "PDF Generation"
         ],
         "endpoints": {
-            "health": "/api/health",
+            "health": "/health",
             "generate_rca": "POST /api/generate-rca",
             "quick_rca": "POST /api/quick-rca",
             "recommendations": "POST /api/recommendations",
@@ -85,21 +85,41 @@ async def root():
     }
 
 
+@app.get("/health")
+async def health():
+    """Simple health check endpoint for Render"""
+    return {
+        "status": "healthy",
+        "service": settings.APP_NAME,
+        "version": settings.APP_VERSION
+    }
+
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize on startup"""
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
+    logger.info(f"Python version: {sys.version}")
+    logger.info(f"Environment: {'DEBUG' if settings.DEBUG else 'PRODUCTION'}")
+    
+    # Check critical environment variables
+    if not settings.GROQ_API_KEY:
+        logger.warning("⚠️  GROQ_API_KEY is not set - AI features will not work")
+    else:
+        logger.info("✅ GROQ_API_KEY is configured")
     
     # Automatically initialize database tables if they do not exist
     try:
         from database.connection import init_db
         init_db()
+        logger.info("✅ Database initialized successfully")
     except Exception as db_err:
-        logger.error(f"Failed to auto-initialize database on startup: {db_err}")
+        logger.error(f"⚠️  Failed to auto-initialize database on startup: {db_err}")
+        logger.warning("Continuing without database initialization...")
 
     logger.info(f"Groq Model: {settings.GROQ_MODEL}")
-    logger.info(f"Server ready on {settings.API_HOST}:{settings.API_PORT}")
-    logger.info(f"Documentation: http://{settings.API_HOST}:{settings.API_PORT}/docs")
+    logger.info(f"✅ Server ready on port {settings.API_PORT}")
+    logger.info(f"📚 Documentation: /docs")
 
 
 @app.on_event("shutdown")
