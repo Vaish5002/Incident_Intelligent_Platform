@@ -1,44 +1,32 @@
 # FastAPI and Server
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
 gunicorn==21.2.0
-pydantic==2.5.3
-pydantic-settings==2.1.0
+pydantic==2.10.3
+pydantic-settings==2.6.1
 
 # Groq Cloud AI
-groq==0.9.0
+groq==0.13.0
 
 # Database
-sqlalchemy==2.0.25
+sqlalchemy==2.0.36
 
 # Utilities
-python-dotenv==1.0.0
-python-multipart==0.0.6
+python-dotenv==1.0.1
+python-multipart==0.0.9
 
 # HTTP Clients
-httpx==0.26.0
-requests==2.31.0
+httpx==0.27.2
+requests==2.32.3
 
 # GitHub Integration
-PyGithub==2.1.1
+PyGithub==2.5.0
 
 # Logging
-loguru==0.7.2
+loguru==0.7.3
 
 # PDF Generation
-reportlab==4.0.9
-PyPDF2==3.0.1
-
-# Embeddings and Vector Operations
-numpy==1.26.3
-scikit-learn==1.4.0
+reportlab==4.2.5
 
 # Date/Time
-python-dateutil==2.8.2
-
-# CORS
-python-jose[cryptography]==3.3.0
-
-# Testing (optional)
-pytest==7.4.4
-pytest-asyncio==0.23.3
+python-dateutil==2.9.0
