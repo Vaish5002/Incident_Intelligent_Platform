@@ -29,6 +29,17 @@ SmartOps AI transforms incident response from a manual, time-consuming process i
 - **Scalability**: Handles 1000+ concurrent investigations
 - **PDF Generation**: < 2 seconds for complete RCA report
 
+## Live Deployment 🚀
+
+**Main Application:**
+- **Frontend**: https://incident-intelligent-platform.vercel.app
+- **Backend**: https://smartops-ai-backend.onrender.com
+- **API Docs**: https://smartops-ai-backend.onrender.com/docs
+
+**Demo Platform:**
+- **Frontend**: https://chaos-demo-platform.vercel.app
+- **Backend**: https://chaos-demo-platform.onrender.com
+
 ## Demo Credentials
 
 Access the live application with these test credentials:
