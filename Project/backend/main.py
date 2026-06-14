@@ -92,7 +92,7 @@ async def startup_event():
     
     # Automatically initialize database tables if they do not exist
     try:
-        from backend.database.connection import init_db
+        from database.connection import init_db
         init_db()
     except Exception as db_err:
         logger.error(f"Failed to auto-initialize database on startup: {db_err}")
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     import uvicorn
     
     uvicorn.run(
-        "backend.main:app",
+        "main:app",
         host=settings.API_HOST,
         port=settings.API_PORT,
         reload=settings.DEBUG

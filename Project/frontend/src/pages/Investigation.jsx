@@ -22,8 +22,8 @@ const Investigation = () => {
     setFormData(data);
 
     try {
-      // Trigger POST /investigate (real backend endpoint)
-      const response = await api.investigate(data.githubUrl, data.description);
+      // Trigger FULL INVESTIGATION - Uses BOTH GitHub Agent AND Log Agent
+      const response = await api.fullInvestigate(data.githubUrl, data.description);
 
       setLoading(false);
       if (response.success) {
@@ -49,8 +49,8 @@ const Investigation = () => {
       const investigationId = formData.investigationId;
       
       if (investigationId) {
-        // Get full results from backend
-        const resultsResponse = await api.getResults(investigationId);
+        // Get FULL RESULTS with REAL agent data
+        const resultsResponse = await api.getFullResults(investigationId);
         
         if (resultsResponse.success) {
           // Convert backend data to frontend format
@@ -84,12 +84,16 @@ const Investigation = () => {
             gitAnalysis: investigation.probable_root_cause ? {
               riskyCodeChanges: investigation.probable_root_cause.riskyCodeChanges || [],
               commitHash: investigation.probable_root_cause.commit || "N/A",
+              commitUrl: investigation.probable_root_cause.commit_url || "",
               author: investigation.probable_root_cause.author || "N/A",
+              repoUrl: formData.githubUrl || "",
               diff: investigation.probable_root_cause.diff || `diff --git a/${investigation.probable_root_cause.file || 'code.src'} b/${investigation.probable_root_cause.file || 'code.src'}\n--- a/${investigation.probable_root_cause.file || 'code.src'}\n+++ b/${investigation.probable_root_cause.file || 'code.src'}\n@@ -1,3 +1,3 @@\n-${investigation.probable_root_cause.description || 'risky change'}\n+${investigation.probable_root_cause.description || 'risky change'}`
             } : {
               riskyCodeChanges: [],
               commitHash: "N/A",
+              commitUrl: "",
               author: "N/A",
+              repoUrl: formData.githubUrl || "",
               diff: "No repository changes detected."
             },
             riskAssessment: {

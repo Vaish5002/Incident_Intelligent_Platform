@@ -25,6 +25,9 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-glow: glow 4s ease-in-out infinite alternate;
+  --animate-spin-slow: spin-slow 20s linear infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-slideInLeft: slideInLeft 0.4s ease-out forwards;
   
   @keyframes float {
     0%, 100% { transform: translateY(0); }
@@ -33,6 +36,24 @@
   @keyframes glow {
     0% { opacity: 0.3; filter: blur(40px); }
     100% { opacity: 0.6; filter: blur(60px); }
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 }
 
@@ -115,4 +136,36 @@ body {
   text-align: left;
   border-inline: none;
   min-height: 100vh;
+}
+
+/* Custom Animations */
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.4s ease-out forwards;
+}
+
+/* Custom Scrollbar for findings feed */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
 }

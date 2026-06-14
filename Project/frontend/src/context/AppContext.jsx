@@ -54,7 +54,33 @@ export const AppProvider = ({ children }) => {
           impactScore: 7.0,
           backendInvestigationId: inv.id,
           repo_url: inv.repo_url,
-          incident_description: inv.incident_description
+          incident_description: inv.incident_description,
+          gitAnalysis: {
+            repoUrl: inv.repo_url || "",
+            commitHash: "N/A",
+            commitUrl: "",
+            author: "N/A",
+            diff: "No repository changes detected.",
+            riskyCodeChanges: []
+          },
+          logAnalysis: {
+            rootCause: inv.incident_description,
+            errorPatterns: [],
+            errorCount: 0,
+            rawLogs: ""
+          },
+          timelineAnalysis: {
+            sequence: [],
+            duration: "N/A",
+            triggerType: "Manual"
+          },
+          riskAssessment: {
+            score: 75,
+            severity: "MEDIUM",
+            confidence: "85%",
+            riskFactors: []
+          },
+          aiRecommendations: []
         }));
 
         // Merge with mock incidents (keep mock data for demo purposes)

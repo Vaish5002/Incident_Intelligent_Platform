@@ -121,20 +121,9 @@ const Monitoring = () => {
     setInjectionSuccess(null);
 
     try {
-      const response = await fetch('https://chaos-demo-platform.onrender.com/inject-failure', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: failureType,
-          duration_seconds: 300 // 5 minutes
-        })
-      });
+      const response = await api.injectFailure(failureType);
 
-      const data = await response.json();
-
-      if (response.ok && data.status === 'injected') {
+      if (response.success && response.data?.status === 'injected') {
         setInjectionSuccess({
           type: 'success',
           message: `${failureType.replace('_', ' ').toUpperCase()} injected successfully! Logs generating...`

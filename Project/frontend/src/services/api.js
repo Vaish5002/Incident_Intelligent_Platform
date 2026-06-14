@@ -270,6 +270,53 @@ export const api = {
   },
 
   /**
+   * POST /full-investigate
+   * FULL INVESTIGATION - Uses BOTH GitHub Agent AND Log Agent
+   * This is the REAL implementation with all agents working
+   */
+  fullInvestigate: async (githubUrl, description) => {
+    try {
+      const response = await axios.post(`${MEMBER3_API_URL}/full-investigate`, {
+        repo_url: githubUrl,
+        incident_description: description
+      });
+
+      return {
+        success: true,
+        investigationId: response.data.investigation_id,
+        status: response.data.status,
+        message: "Full investigation started - all agents activated",
+        data: response.data
+      };
+    } catch (error) {
+      console.error('Full Investigation API error:', error);
+      throw new Error(error.response?.data?.detail || error.message || 'Failed to start full investigation');
+    }
+  },
+
+  /**
+   * GET /full-investigations/:id
+   * Get FULL investigation results with REAL agent data
+   */
+  getFullResults: async (id) => {
+    try {
+      const response = await axios.get(`${MEMBER3_API_URL}/full-investigations/${id}`);
+      
+      if (response.data.error) {
+        throw new Error(response.data.error);
+      }
+
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      console.error('Get full results error:', error);
+      throw new Error(error.response?.data?.detail || error.message || 'Failed to fetch full investigation results');
+    }
+  },
+
+  /**
    * GET /health (Member 1)
    * Health check for Member 1 backend
    */
@@ -306,6 +353,26 @@ export const api = {
         success: false,
         error: error.message
       };
+    }
+  },
+
+  /**
+   * POST /api/chaos/inject-failure (Member 3)
+   * Proxy failure injection to Chaos Platform
+   */
+  injectFailure: async (type) => {
+    try {
+      const response = await axios.post(`${MEMBER3_API_URL}/chaos/inject-failure`, {
+        type,
+        duration_seconds: 300
+      });
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      console.error('Inject failure error:', error);
+      throw new Error(error.response?.data?.detail || 'Failed to inject failure');
     }
   }
 };
